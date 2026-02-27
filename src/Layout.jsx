@@ -21,7 +21,7 @@ const navItems = [
   { name: "Inicio", page: "Dashboard", icon: Home },
   { name: "Reporte Diario", page: "DailyReports", icon: ClipboardList },
   { name: "Trabajadores", page: "Workers", icon: Users },
-  { name: "Grupos", page: "WorkerGroups", icon: Users },
+  { name: "Grupos", page: "WorkerGroups", icon: UsersRound },
   { name: "Labores", page: "WorkTypes", icon: Briefcase },
   { name: "Cierres de Pago", page: "PaymentClosings", icon: CreditCard },
   { name: "Historial de Pagos", page: "PaymentHistory", icon: History },
