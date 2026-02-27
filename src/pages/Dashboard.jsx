@@ -107,27 +107,37 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* Locations */}
+        {/* Groups summary */}
         <Card className="border-slate-200/80 shadow-sm">
-          <div className="p-5 border-b border-slate-100">
-            <h2 className="font-semibold text-slate-800">Ubicaciones Activas</h2>
+          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="font-semibold text-slate-800">Grupos Activos</h2>
           </div>
-          <div className="p-5 space-y-4">
-            {topLocations.length === 0 && (
-              <p className="text-sm text-slate-400 text-center py-4">Sin datos de ubicaciones</p>
+          <div className="p-5 space-y-3">
+            {workerGroups.filter(g => g.status !== "inactivo").length === 0 && (
+              <p className="text-sm text-slate-400 text-center py-4">Sin grupos definidos</p>
             )}
-            {topLocations.map(([loc, data]) => (
-              <div key={loc} className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-50">
-                  <MapPin className="w-4 h-4 text-emerald-600" />
+            {workerGroups.filter(g => g.status !== "inactivo").map(g => {
+              const gWorkers = workers.filter(w => w.group === g.name && w.status !== "inactivo");
+              const gAmount = openReports.filter(r => r.group === g.name).reduce((s, r) => s + (r.amount || 0), 0);
+              return (
+                <div key={g.id} className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${g.color || "#10b981"}20` }}>
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: g.color || "#10b981" }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-700 truncate">{g.name}</p>
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                      {g.supervisor_name && <span className="flex items-center gap-1"><Shield className="w-3 h-3" />{g.supervisor_name}</span>}
+                      <span>{gWorkers.length} trabaj.</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-slate-700">${gAmount.toLocaleString()}</p>
+                    <p className="text-xs text-slate-400">pendiente</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-700 truncate">{loc}</p>
-                  <p className="text-xs text-slate-400">{data.count} tareas</p>
-                </div>
-                <p className="text-sm font-semibold text-slate-700">${data.amount.toLocaleString()}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       </div>
