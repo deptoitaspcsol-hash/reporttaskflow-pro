@@ -53,6 +53,7 @@ import WorkTypes from './pages/WorkTypes';
 import DailyReports from './pages/DailyReports';
 import PaymentClosings from './pages/PaymentClosings';
 import Reports from './pages/Reports';
+import PaymentHistory from './pages/PaymentHistory';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +64,7 @@ export const PAGES = {
     "DailyReports": DailyReports,
     "PaymentClosings": PaymentClosings,
     "Reports": Reports,
+    "PaymentHistory": PaymentHistory,
 }
 
 export const pagesConfig = {
