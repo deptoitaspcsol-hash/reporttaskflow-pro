@@ -135,6 +135,7 @@ export default function Reports() {
 
         <Tabs defaultValue="workers" className="space-y-6">
           <TabsList>
+            <TabsTrigger value="groups" className="gap-1"><UsersRound className="w-3.5 h-3.5" /> Por Grupo</TabsTrigger>
             <TabsTrigger value="workers" className="gap-1"><Users className="w-3.5 h-3.5" /> Por Trabajador</TabsTrigger>
             <TabsTrigger value="worktypes" className="gap-1"><Briefcase className="w-3.5 h-3.5" /> Por Labor</TabsTrigger>
             <TabsTrigger value="locations" className="gap-1"><MapPin className="w-3.5 h-3.5" /> Por Ubicación</TabsTrigger>
