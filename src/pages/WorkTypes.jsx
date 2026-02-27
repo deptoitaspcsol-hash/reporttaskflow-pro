@@ -1,0 +1,136 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Briefcase, Plus, Pencil, Trash2, DollarSign } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import PageHeader from "../components/shared/PageHeader";
+import EmptyState from "../components/shared/EmptyState";
+
+const defaultWork = { name: "", description: "", unit: "", rate: 0, category: "" };
+
+export default function WorkTypes() {
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState(defaultWork);
+  const queryClient = useQueryClient();
+
+  const { data: workTypes = [], isLoading } = useQuery({
+    queryKey: ["workTypes"],
+    queryFn: () => base44.entities.WorkType.list("-created_date"),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.WorkType.create(data),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workTypes"] }); closeForm(); },
+  });
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.WorkType.update(id, data),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workTypes"] }); closeForm(); },
+  });
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.WorkType.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workTypes"] }),
+  });
+
+  const closeForm = () => { setShowForm(false); setEditing(null); setForm(defaultWork); };
+
+  const handleEdit = (wt) => {
+    setEditing(wt);
+    setForm({ name: wt.name, description: wt.description || "", unit: wt.unit, rate: wt.rate, category: wt.category || "" });
+    setShowForm(true);
+  };
+
+  const handleSubmit = () => {
+    if (!form.name.trim() || !form.unit.trim()) return;
+    const data = { ...form, rate: Number(form.rate) };
+    if (editing) updateMutation.mutate({ id: editing.id, data });
+    else createMutation.mutate(data);
+  };
+
+  return (
+    <div>
+      <PageHeader
+        title="Tipos de Labores"
+        subtitle={`${workTypes.length} labores registradas`}
+        actions={
+          <Button onClick={() => { setForm(defaultWork); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+            <Plus className="w-4 h-4" /> Nueva Labor
+          </Button>
+        }
+      />
+
+      {workTypes.length === 0 && !isLoading ? (
+        <EmptyState icon={Briefcase} title="Sin labores" description="Define los tipos de labores y sus tarifas" />
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {workTypes.map(wt => (
+            <Card key={wt.id} className="p-5 border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <p className="font-semibold text-slate-800">{wt.name}</p>
+                  {wt.category && <p className="text-xs text-slate-400 mt-0.5">{wt.category}</p>}
+                </div>
+                <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg">
+                  <DollarSign className="w-3.5 h-3.5" />
+                  <span className="font-bold text-sm">{wt.rate?.toLocaleString()}</span>
+                  <span className="text-xs text-emerald-600">/{wt.unit}</span>
+                </div>
+              </div>
+              {wt.description && <p className="text-xs text-slate-500 mt-2">{wt.description}</p>}
+              <div className="flex gap-2 mt-4 pt-3 border-t border-slate-100">
+                <Button variant="ghost" size="sm" onClick={() => handleEdit(wt)} className="text-slate-500 gap-1">
+                  <Pencil className="w-3.5 h-3.5" /> Editar
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(wt.id)} className="text-red-500 hover:text-red-600 gap-1">
+                  <Trash2 className="w-3.5 h-3.5" /> Eliminar
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      <Dialog open={showForm} onOpenChange={(open) => { if (!open) closeForm(); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editing ? "Editar Labor" : "Nueva Labor"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <Label>Nombre de la Labor *</Label>
+              <Input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Ej: Limpieza de terreno" />
+            </div>
+            <div>
+              <Label>Descripción</Label>
+              <Input value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Descripción breve" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Unidad de medida *</Label>
+                <Input value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} placeholder="Ej: metros, horas" />
+              </div>
+              <div>
+                <Label>Tarifa por unidad *</Label>
+                <Input type="number" value={form.rate} onChange={e => setForm({...form, rate: e.target.value})} placeholder="0.00" />
+              </div>
+            </div>
+            <div>
+              <Label>Categoría</Label>
+              <Input value={form.category} onChange={e => setForm({...form, category: e.target.value})} placeholder="Ej: Construcción" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={closeForm}>Cancelar</Button>
+            <Button onClick={handleSubmit} className="bg-emerald-600 hover:bg-emerald-700">
+              {editing ? "Actualizar" : "Crear"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
