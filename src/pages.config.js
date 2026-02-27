@@ -54,6 +54,7 @@ import DailyReports from './pages/DailyReports';
 import PaymentClosings from './pages/PaymentClosings';
 import Reports from './pages/Reports';
 import PaymentHistory from './pages/PaymentHistory';
+import WorkerGroups from './pages/WorkerGroups';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "PaymentClosings": PaymentClosings,
     "Reports": Reports,
     "PaymentHistory": PaymentHistory,
+    "WorkerGroups": WorkerGroups,
 }
 
 export const pagesConfig = {
