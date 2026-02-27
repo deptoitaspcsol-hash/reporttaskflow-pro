@@ -25,11 +25,13 @@ const PRIORITIES = [
 export default function TaskForm({ task, onSubmit, onCancel }) {
   const [form, setForm] = useState(task || {
     title: "", description: "", location: "", assigned_to: "worker",
-    worker_id: "", worker_name: "", group_name: "", work_type_id: "",
-    work_type_name: "", start_date: "", end_date: "", estimated_cost: "",
+    worker_ids: [], worker_names: [], worker_id: "", worker_name: "",
+    group_name: "", work_type_id: "", work_type_name: "",
+    start_date: "", end_date: "", estimated_cost: "",
     status: "pendiente", priority: "media", attachments: [], notes: "",
   });
   const [uploading, setUploading] = useState(false);
+  const [workerSearch, setWorkerSearch] = useState("");
 
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
