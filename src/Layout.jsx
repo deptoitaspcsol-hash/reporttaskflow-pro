@@ -22,7 +22,7 @@ const navItems = [
   { name: "Trabajadores", page: "Workers", icon: Users },
   { name: "Labores", page: "WorkTypes", icon: Briefcase },
   { name: "Cierres de Pago", page: "PaymentClosings", icon: CreditCard },
-  { name: "Historial de Pagos", page: "PaymentHistory", icon: FileText },
+  { name: "Historial de Pagos", page: "PaymentHistory", icon: History },
   { name: "Reportes", page: "Reports", icon: BarChart3 },
 ];
 
