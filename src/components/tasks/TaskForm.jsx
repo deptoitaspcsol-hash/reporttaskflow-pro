@@ -54,6 +54,20 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
     set("worker_name", w?.full_name || "");
   };
 
+  const toggleWorker = (worker) => {
+    const ids = [...(form.worker_ids || [])];
+    const names = [...(form.worker_names || [])];
+    const idx = ids.indexOf(worker.id);
+    if (idx === -1) {
+      ids.push(worker.id);
+      names.push(worker.full_name);
+    } else {
+      ids.splice(idx, 1);
+      names.splice(idx, 1);
+    }
+    setForm(f => ({ ...f, worker_ids: ids, worker_names: names, worker_id: ids[0] || "", worker_name: names[0] || "" }));
+  };
+
   const handleWorkType = (id) => {
     const wt = workTypes.find(w => w.id === id);
     set("work_type_id", id);
