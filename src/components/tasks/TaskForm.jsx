@@ -95,7 +95,13 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ ...form, estimated_cost: form.estimated_cost ? Number(form.estimated_cost) : undefined });
+    onSubmit({
+      ...form,
+      estimated_cost: form.estimated_cost ? Number(form.estimated_cost) : undefined,
+      // sync legacy fields from multi-select
+      worker_id: (form.worker_ids || [])[0] || form.worker_id || "",
+      worker_name: (form.worker_names || []).join(", ") || form.worker_name || "",
+    });
   };
 
   return (
