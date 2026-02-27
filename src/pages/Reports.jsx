@@ -26,6 +26,7 @@ export default function Reports() {
 
   const { data: reports = [] } = useQuery({ queryKey: ["reports"], queryFn: () => base44.entities.DailyReport.list("-date", 2000) });
   const { data: workers = [] } = useQuery({ queryKey: ["workers"], queryFn: () => base44.entities.Worker.list() });
+  const { data: workerGroups = [] } = useQuery({ queryKey: ["workerGroups"], queryFn: () => base44.entities.WorkerGroup.list() });
 
   const filtered = useMemo(() =>
     reports.filter(r => {
@@ -35,6 +36,19 @@ export default function Reports() {
     }), [reports, dateFrom, dateTo, groupFilter]);
 
   const groups = [...new Set(workers.map(w => w.group).filter(Boolean))];
+
+  // By group
+  const byGroup = useMemo(() => {
+    const map = {};
+    filtered.forEach(r => {
+      const grp = r.group || "Sin grupo";
+      if (!map[grp]) map[grp] = { name: grp, total: 0, tasks: 0, workers: new Set() };
+      map[grp].total += r.amount || 0;
+      map[grp].tasks++;
+      map[grp].workers.add(r.worker_name);
+    });
+    return Object.values(map).map(g => ({ ...g, workerCount: g.workers.size })).sort((a, b) => b.total - a.total);
+  }, [filtered]);
   const totalAmount = filtered.reduce((s, r) => s + (r.amount || 0), 0);
 
   // By worker
