@@ -32,6 +32,11 @@ export default function Dashboard() {
     queryFn: () => base44.entities.WorkerGroup.list(),
   });
 
+  const { data: tasks = [] } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: () => base44.entities.Task.list("-created_date", 100),
+  });
+
   const activeWorkers = workers.filter((w) => w.status !== "inactivo");
   const openReports = reports.filter((r) => r.status === "abierto");
   const totalOpen = openReports.reduce((s, r) => s + (r.amount || 0), 0);
