@@ -27,6 +27,11 @@ export default function Dashboard() {
     queryFn: () => base44.entities.PaymentClosing.list("-created_date", 50),
   });
 
+  const { data: workerGroups = [] } = useQuery({
+    queryKey: ["workerGroups"],
+    queryFn: () => base44.entities.WorkerGroup.list(),
+  });
+
   const activeWorkers = workers.filter((w) => w.status !== "inactivo");
   const openReports = reports.filter((r) => r.status === "abierto");
   const totalOpen = openReports.reduce((s, r) => s + (r.amount || 0), 0);
