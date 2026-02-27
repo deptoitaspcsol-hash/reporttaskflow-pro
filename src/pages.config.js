@@ -55,6 +55,7 @@ import PaymentClosings from './pages/PaymentClosings';
 import Reports from './pages/Reports';
 import PaymentHistory from './pages/PaymentHistory';
 import WorkerGroups from './pages/WorkerGroups';
+import Tasks from './pages/Tasks';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "Reports": Reports,
     "PaymentHistory": PaymentHistory,
     "WorkerGroups": WorkerGroups,
+    "Tasks": Tasks,
 }
 
 export const pagesConfig = {
