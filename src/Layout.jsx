@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 const navItems = [
   { name: "Inicio", page: "Dashboard", icon: Home },
   { name: "Reporte Diario", page: "DailyReports", icon: ClipboardList },
+  { name: "Tareas", page: "Tasks", icon: ListTodo },
   { name: "Trabajadores", page: "Workers", icon: Users },
   { name: "Grupos", page: "WorkerGroups", icon: UsersRound },
   { name: "Labores", page: "WorkTypes", icon: Briefcase },
