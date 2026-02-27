@@ -82,6 +82,36 @@ export default function Dashboard() {
         <StatCard title="Cierres Realizados" value={closings.length} icon={CreditCard} color="violet" />
       </div>
 
+      {/* Tasks summary */}
+      {tasks.filter(t => t.status !== "completada" && t.status !== "cancelada").length > 0 && (
+        <Card className="border-slate-200/80 shadow-sm mb-6">
+          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="font-semibold text-slate-800 flex items-center gap-2"><ListTodo className="w-4 h-4 text-emerald-600" /> Tareas Recientes</h2>
+            <Link to={createPageUrl("Tasks")}>
+              <Button variant="ghost" size="sm" className="text-emerald-600 gap-1">Ver todas <ArrowRight className="w-3.5 h-3.5" /></Button>
+            </Link>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {tasks.filter(t => t.status !== "completada" && t.status !== "cancelada").slice(0, 5).map(t => {
+              const statusCls = { pendiente: "bg-amber-100 text-amber-700", en_progreso: "bg-blue-100 text-blue-700" };
+              const statusLabel = { pendiente: "Pendiente", en_progreso: "En Progreso" };
+              return (
+                <div key={t.id} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50/50">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-slate-800 truncate">{t.title}</p>
+                    <p className="text-xs text-slate-400">{t.worker_name || t.group_name || "Sin asignar"}{t.location ? ` · ${t.location}` : ""}</p>
+                  </div>
+                  <div className="ml-4 flex items-center gap-3 shrink-0">
+                    {t.estimated_cost > 0 && <span className="text-sm font-semibold text-slate-700">${Number(t.estimated_cost).toLocaleString()}</span>}
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusCls[t.status] || "bg-slate-100 text-slate-500"}`}>{statusLabel[t.status] || t.status}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent reports */}
         <Card className="lg:col-span-2 border-slate-200/80 shadow-sm">
