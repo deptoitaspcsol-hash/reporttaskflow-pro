@@ -154,15 +154,44 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
 
         {form.assigned_to === "worker" ? (
           <div className="space-y-1">
-            <Label>Trabajador</Label>
-            <Select value={form.worker_id} onValueChange={handleWorker}>
-              <SelectTrigger><SelectValue placeholder="Seleccionar trabajador" /></SelectTrigger>
-              <SelectContent>
-                {workers.filter(w => w.status !== "inactivo").map(w => (
-                  <SelectItem key={w.id} value={w.id}>{w.full_name}</SelectItem>
+            <Label>Trabajadores</Label>
+            {(form.worker_names || []).length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-1">
+                {form.worker_names.map((name, i) => (
+                  <span key={i} className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded-full border border-emerald-200">
+                    {name}
+                    <button type="button" onClick={() => toggleWorker({ id: form.worker_ids[i], full_name: name })}>
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
                 ))}
-              </SelectContent>
-            </Select>
+              </div>
+            )}
+            <Input
+              placeholder="Buscar trabajador..."
+              value={workerSearch}
+              onChange={e => setWorkerSearch(e.target.value)}
+              className="mb-1"
+            />
+            <div className="border border-slate-200 rounded-lg max-h-40 overflow-y-auto divide-y divide-slate-100">
+              {workers.filter(w => w.status !== "inactivo" && w.full_name.toLowerCase().includes(workerSearch.toLowerCase())).map(w => {
+                const selected = (form.worker_ids || []).includes(w.id);
+                return (
+                  <button
+                    key={w.id}
+                    type="button"
+                    onClick={() => toggleWorker(w)}
+                    className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-slate-50 transition-colors text-left ${selected ? "bg-emerald-50" : ""}`}
+                  >
+                    <span className={selected ? "text-emerald-700 font-medium" : "text-slate-700"}>{w.full_name}</span>
+                    {selected && <Check className="w-4 h-4 text-emerald-600" />}
+                  </button>
+                );
+              })}
+              {workers.filter(w => w.status !== "inactivo" && w.full_name.toLowerCase().includes(workerSearch.toLowerCase())).length === 0 && (
+                <p className="text-xs text-slate-400 px-3 py-2">Sin resultados</p>
+              )}
+            </div>
           </div>
         ) : (
           <div className="space-y-1">
