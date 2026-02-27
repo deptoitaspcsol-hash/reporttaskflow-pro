@@ -77,8 +77,8 @@ export default function Dashboard() {
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard title="Trabajadores Activos" value={activeWorkers.length} icon={Users} color="blue" />
-        <StatCard title="Hoy" value={`$${todayAmount.toLocaleString()}`} icon={TrendingUp} color="emerald" subtitle={`${todayReports.length} tareas`} />
-        <StatCard title="Reportes Abiertos" value={openReports.length} icon={ClipboardList} color="amber" subtitle={`$${totalOpen.toLocaleString()}`} />
+        <StatCard title="Hoy" value={`$${todayAmount.toLocaleString()}`} icon={TrendingUp} color="emerald" subtitle={`${todayReports.length} reportes`} />
+        <StatCard title="Tareas Activas" value={tasks.filter(t => t.status === "en_progreso").length} icon={ListTodo} color="amber" subtitle={`${tasks.filter(t => t.status === "pendiente").length} pendientes`} />
         <StatCard title="Cierres Realizados" value={closings.length} icon={CreditCard} color="violet" />
       </div>
 
