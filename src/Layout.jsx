@@ -8,6 +8,7 @@ import {
   BarChart3,
   FileText,
   CreditCard,
+  History,
   Menu,
   X,
   ChevronRight,
