@@ -133,7 +133,7 @@ export default function Reports() {
           <p className="text-sm text-slate-500">Período: {dateFrom} — {dateTo} | Grupo: {groupFilter === "all" ? "Todos" : groupFilter}</p>
         </div>
 
-        <Tabs defaultValue="workers" className="space-y-6">
+        <Tabs defaultValue="groups" className="space-y-6">
           <TabsList>
             <TabsTrigger value="groups" className="gap-1"><UsersRound className="w-3.5 h-3.5" /> Por Grupo</TabsTrigger>
             <TabsTrigger value="workers" className="gap-1"><Users className="w-3.5 h-3.5" /> Por Trabajador</TabsTrigger>
