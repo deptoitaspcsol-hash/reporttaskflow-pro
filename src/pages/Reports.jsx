@@ -141,6 +141,64 @@ export default function Reports() {
             <TabsTrigger value="locations" className="gap-1"><MapPin className="w-3.5 h-3.5" /> Por Ubicación</TabsTrigger>
           </TabsList>
 
+          <TabsContent value="groups">
+            <div className="grid lg:grid-cols-2 gap-6">
+              <Card className="p-5 border-slate-200/80 shadow-sm">
+                <h3 className="font-semibold text-slate-800 mb-4">Rendimiento por Grupo</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={byGroup}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                    <YAxis tickFormatter={v => `$${v.toLocaleString()}`} />
+                    <Tooltip formatter={v => `$${v.toLocaleString()}`} />
+                    <Bar dataKey="total" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+              <Card className="border-slate-200/80 shadow-sm overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-50">
+                      <TableHead className="text-xs">Grupo</TableHead>
+                      <TableHead className="text-xs text-right">Trabaj.</TableHead>
+                      <TableHead className="text-xs text-right">Tareas</TableHead>
+                      <TableHead className="text-xs text-right">Monto Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {byGroup.map((g, i) => {
+                      const groupMeta = workerGroups.find(wg => wg.name === g.name);
+                      return (
+                        <TableRow key={i}>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {groupMeta?.color && (
+                                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: groupMeta.color }} />
+                              )}
+                              <span className="text-sm font-medium">{g.name}</span>
+                            </div>
+                            {groupMeta?.supervisor_name && (
+                              <p className="text-xs text-slate-400 mt-0.5 ml-4">{groupMeta.supervisor_name}</p>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-sm text-right">{g.workerCount}</TableCell>
+                          <TableCell className="text-sm text-right">{g.tasks}</TableCell>
+                          <TableCell className="text-sm text-right font-semibold">${g.total.toLocaleString()}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                    <TableRow className="bg-emerald-50 font-bold">
+                      <TableCell>TOTAL</TableCell>
+                      <TableCell className="text-right">—</TableCell>
+                      <TableCell className="text-right">{filtered.length}</TableCell>
+                      <TableCell className="text-right">${totalAmount.toLocaleString()}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Card>
+            </div>
+          </TabsContent>
+
           <TabsContent value="workers">
             <div className="grid lg:grid-cols-2 gap-6">
               <Card className="p-5 border-slate-200/80 shadow-sm">
