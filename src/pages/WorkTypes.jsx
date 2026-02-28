@@ -59,11 +59,11 @@ export default function WorkTypes() {
         title="Tipos de Labores"
         subtitle={`${workTypes.length} labores registradas`}
         actions={
-          {canWrite && (
+          canWrite ? (
             <Button onClick={() => { setForm(defaultWork); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
               <Plus className="w-4 h-4" /> Nueva Labor
             </Button>
-          )}
+          ) : null
         }
       />
 

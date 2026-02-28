@@ -124,11 +124,11 @@ export default function DailyReports() {
         actions={
           <div className="flex gap-2">
             <PrintButton contentRef={printRef} />
-            {canWrite && (
+            {canWrite ? (
               <Button onClick={() => { resetForm(); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
                 <Plus className="w-4 h-4" /> Agregar Tarea
               </Button>
-            )}
+            ) : null}
           </div>
         }
       />

@@ -138,11 +138,11 @@ export default function Tasks() {
                 Calendario
               </Button>
             </div>
-            {canWrite && (
+            {canWrite ? (
               <Button onClick={() => setShowForm(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
                 <Plus className="w-4 h-4" /> Nueva Tarea
               </Button>
-            )}
+            ) : null}
           </div>
         }
       />

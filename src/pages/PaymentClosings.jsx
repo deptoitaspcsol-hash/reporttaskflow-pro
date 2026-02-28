@@ -108,11 +108,11 @@ export default function PaymentClosings() {
         title="Cierres de Pago"
         subtitle={`${closings.length} cierres realizados`}
         actions={
-          {canWrite && (
+          canWrite ? (
             <Button onClick={() => { setShowCreate(true); setPreview(null); setClosingForm({ worker_id: "", period_start: "", period_end: format(new Date(), "yyyy-MM-dd"), notes: "" }); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
               <Plus className="w-4 h-4" /> Nuevo Cierre
             </Button>
-          )}
+          ) : null
         }
       />
 

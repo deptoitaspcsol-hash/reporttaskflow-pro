@@ -90,11 +90,11 @@ export default function WorkerGroups() {
         title="Grupos de Trabajadores"
         subtitle={`${groups.filter(g => g.status !== "inactivo").length} grupos activos`}
         actions={
-          {canWrite && (
+          canWrite ? (
             <Button onClick={() => { setForm(defaultForm); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
               <Plus className="w-4 h-4" /> Nuevo Grupo
             </Button>
-          )}
+          ) : null
         }
       />
 
