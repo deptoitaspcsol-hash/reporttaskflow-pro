@@ -15,7 +15,7 @@ import EmptyState from "../components/shared/EmptyState";
 const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", status: "activo" };
 
 const generateWorkerCode = (fullName, idNumber) => {
-  const nameParts = fullName.trim().split(/\s+/).filter(Boolean);
+  const nameParts = (fullName || "").trim().split(/\s+/).filter(Boolean);
   const initials = nameParts.map(p => p.charAt(0).toUpperCase()).join("");
   const idSuffix = idNumber ? String(idNumber).replace(/\D/g, "").slice(-4) : "";
   if (initials && idSuffix) return `${initials}-${idSuffix}`;
