@@ -37,6 +37,14 @@ export default function UserManagement() {
     },
   });
 
+  const toggleBlockMutation = useMutation({
+    mutationFn: ({ id, blocked }) => base44.entities.User.update(id, { blocked }),
+    onSuccess: (_, { blocked }) => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success(blocked ? "Usuario bloqueado" : "Usuario desbloqueado");
+    },
+  });
+
   const handleInvite = async () => {
     if (!inviteEmail.trim()) return;
     setInviting(true);
