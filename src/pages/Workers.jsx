@@ -127,7 +127,14 @@ export default function Workers() {
   };
 
   const handleSubmit = () => {
-    if (!form.full_name.trim()) return;
+    const newErrors = {};
+    if (!form.full_name.trim()) newErrors.full_name = "Requerido";
+    if (!form.id_number.trim()) newErrors.id_number = "Requerido";
+    if (!form.phone.trim()) newErrors.phone = "Requerido";
+    if (!form.hire_date) newErrors.hire_date = "Requerido";
+    if (form.base_salary === "" || form.base_salary === null) newErrors.base_salary = "Requerido";
+    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
+    setErrors({});
     const data = { ...form, base_salary: form.base_salary !== "" ? Number(form.base_salary) : undefined };
     if (editing) updateMutation.mutate({ id: editing.id, data });
     else createMutation.mutate(data);
