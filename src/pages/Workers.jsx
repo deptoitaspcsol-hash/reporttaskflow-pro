@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
+import BulkUploadWorkers from "../components/workers/BulkUploadWorkers";
 
 const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", status: "activo", photo_url: "" };
 
