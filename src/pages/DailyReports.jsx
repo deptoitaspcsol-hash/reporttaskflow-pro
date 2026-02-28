@@ -101,7 +101,9 @@ export default function DailyReports() {
 
   const activeWorkers = workers.filter(w => w.status !== "inactivo");
   const groups = [...new Set(workers.map(w => w.group).filter(Boolean))];
-  const locations = [...new Set(reports.map(r => r.location).filter(Boolean))];
+  const workerAreas = [...new Set(workers.map(w => w.work_area).filter(Boolean))];
+  const reportLocations = [...new Set(reports.map(r => r.location).filter(Boolean))];
+  const locations = [...new Set([...workerAreas, ...reportLocations])];
 
   const filtered = reports.filter(r => {
     if (filterDate && r.date !== filterDate) return false;
