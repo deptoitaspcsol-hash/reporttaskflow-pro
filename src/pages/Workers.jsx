@@ -110,8 +110,11 @@ export default function Workers() {
                 </Badge>
               </div>
               <div className="space-y-1.5 text-xs text-slate-500">
+                {w.worker_code && <div className="flex items-center gap-2"><span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">{w.worker_code}</span></div>}
                 {w.id_number && <div className="flex items-center gap-2"><IdCard className="w-3.5 h-3.5" /> {w.id_number}</div>}
                 {w.phone && <div className="flex items-center gap-2"><Phone className="w-3.5 h-3.5" /> {w.phone}</div>}
+                {w.work_area && <div className="flex items-center gap-2"><span className="text-slate-400">Área:</span> {w.work_area}</div>}
+                {w.base_salary && <div className="flex items-center gap-2"><span className="text-emerald-600 font-medium">${Number(w.base_salary).toLocaleString()}</span></div>}
               </div>
               <div className="flex gap-2 mt-4 pt-3 border-t border-slate-100">
                 <Button variant="ghost" size="sm" onClick={() => handleEdit(w)} className="text-slate-500 gap-1">
