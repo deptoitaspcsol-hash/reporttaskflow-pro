@@ -165,8 +165,12 @@ export default function Workers() {
             <Card key={w.id} className="p-5 border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-semibold text-sm">
-                    {w.full_name?.charAt(0)?.toUpperCase()}
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-semibold text-sm overflow-hidden">
+                    {w.photo_url ? (
+                      <img src={w.photo_url} alt={w.full_name} className="w-full h-full object-cover" />
+                    ) : (
+                      w.full_name?.charAt(0)?.toUpperCase()
+                    )}
                   </div>
                   <div>
                     <p className="font-semibold text-slate-800 text-sm">{w.full_name}</p>
