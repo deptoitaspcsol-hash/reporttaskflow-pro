@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 
-const defaultWorker = { full_name: "", id_number: "", phone: "", group: "", status: "activo" };
+const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", status: "activo" };
 
 export default function Workers() {
   const [showForm, setShowForm] = useState(false);
