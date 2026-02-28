@@ -59,6 +59,21 @@ export default function Layout({ children, currentPageName }) {
     return null;
   }
 
+  if (user.blocked) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto">
+            <span className="text-2xl">🚫</span>
+          </div>
+          <p className="text-lg font-semibold text-slate-800">Cuenta bloqueada</p>
+          <p className="text-sm text-slate-500">Tu cuenta ha sido bloqueada. Contacta al administrador.</p>
+          <button onClick={() => base44.auth.logout()} className="text-sm text-red-500 underline mt-2">Cerrar sesión</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Mobile header */}
