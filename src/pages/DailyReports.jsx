@@ -116,6 +116,32 @@ export default function DailyReports() {
 
   const totalFiltered = filtered.reduce((s, r) => s + (r.amount || 0), 0);
 
+  const exportCSV = () => {
+    const headers = ["Fecha", "Trabajador", "Grupo", "Labor", "Ubicación", "Cantidad", "Unidad", "Tarifa", "Monto", "Avance (%)", "Estado", "Observaciones"];
+    const rows = filtered.map(r => [
+      r.date || "",
+      r.worker_name || "",
+      r.group || "",
+      r.work_type_name || "",
+      r.location || "",
+      r.quantity ?? "",
+      r.unit || "",
+      r.rate ?? "",
+      r.amount ?? "",
+      r.progress ?? "",
+      r.status || "",
+      (r.notes || "").replace(/,/g, ";"),
+    ]);
+    const csv = [headers, ...rows].map(row => row.join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `reportes_diarios_${filterDate || "todos"}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       <PageHeader
