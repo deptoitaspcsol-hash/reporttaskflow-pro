@@ -131,9 +131,15 @@ export default function Workers() {
             <DialogTitle>{editing ? "Editar Trabajador" : "Nuevo Trabajador"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div>
-              <Label>Nombre Completo *</Label>
-              <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} placeholder="Nombre completo" />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Nombre Completo *</Label>
+                <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} placeholder="Nombre completo" />
+              </div>
+              <div>
+                <Label>Código de Trabajador</Label>
+                <Input value={form.worker_code} onChange={e => setForm({...form, worker_code: e.target.value})} placeholder="Ej: TRB-001" />
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -147,22 +153,39 @@ export default function Workers() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
+                <Label>Fecha de Ingreso</Label>
+                <Input type="date" value={form.hire_date} onChange={e => setForm({...form, hire_date: e.target.value})} />
+              </div>
+              <div>
+                <Label>Salario Base</Label>
+                <Input type="number" value={form.base_salary} onChange={e => setForm({...form, base_salary: e.target.value})} placeholder="0.00" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Área de Trabajo</Label>
+                <Input value={form.work_area} onChange={e => setForm({...form, work_area: e.target.value})} placeholder="Ej: Campo Norte" list="areas-list" />
+                <datalist id="areas-list">
+                  {[...new Set(workers.map(w => w.work_area).filter(Boolean))].map(a => <option key={a} value={a} />)}
+                </datalist>
+              </div>
+              <div>
                 <Label>Grupo</Label>
                 <Input value={form.group} onChange={e => setForm({...form, group: e.target.value})} placeholder="Ej: Cuadrilla A" list="groups-list" />
                 <datalist id="groups-list">
                   {groups.map(g => <option key={g} value={g} />)}
                 </datalist>
               </div>
-              <div>
-                <Label>Estado</Label>
-                <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="activo">Activo</SelectItem>
-                    <SelectItem value="inactivo">Inactivo</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            </div>
+            <div>
+              <Label>Estado</Label>
+              <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="activo">Activo</SelectItem>
+                  <SelectItem value="inactivo">Inactivo</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
