@@ -90,9 +90,11 @@ export default function WorkerGroups() {
         title="Grupos de Trabajadores"
         subtitle={`${groups.filter(g => g.status !== "inactivo").length} grupos activos`}
         actions={
-          <Button onClick={() => { setForm(defaultForm); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-            <Plus className="w-4 h-4" /> Nuevo Grupo
-          </Button>
+          {canWrite && (
+            <Button onClick={() => { setForm(defaultForm); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+              <Plus className="w-4 h-4" /> Nuevo Grupo
+            </Button>
+          )}
         }
       />
 
@@ -156,14 +158,20 @@ export default function WorkerGroups() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2 pt-3 border-t border-slate-100">
-                    <Button variant="ghost" size="sm" onClick={() => handleEdit(g)} className="text-slate-500 gap-1">
-                      <Pencil className="w-3.5 h-3.5" /> Editar
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(g.id)} className="text-red-500 hover:text-red-600 gap-1">
-                      <Trash2 className="w-3.5 h-3.5" /> Eliminar
-                    </Button>
-                  </div>
+                  {(canWrite || canDelete) && (
+                    <div className="flex gap-2 pt-3 border-t border-slate-100">
+                      {canWrite && (
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(g)} className="text-slate-500 gap-1">
+                          <Pencil className="w-3.5 h-3.5" /> Editar
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(g.id)} className="text-red-500 hover:text-red-600 gap-1">
+                          <Trash2 className="w-3.5 h-3.5" /> Eliminar
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Card>
             );
