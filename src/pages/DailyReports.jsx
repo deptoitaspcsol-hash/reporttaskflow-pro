@@ -194,11 +194,16 @@ export default function DailyReports() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {r.status !== "cerrado" && (
-                          <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(r.id)} className="text-red-400 hover:text-red-600 h-8 w-8">
-                            <Trash2 className="w-3.5 h-3.5" />
+                        <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" onClick={() => setHistoryReport(r)} className="text-slate-400 hover:text-slate-600 h-8 w-8" title="Ver historial">
+                            <History className="w-3.5 h-3.5" />
                           </Button>
-                        )}
+                          {r.status !== "cerrado" && (
+                            <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(r.id)} className="text-red-400 hover:text-red-600 h-8 w-8">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
