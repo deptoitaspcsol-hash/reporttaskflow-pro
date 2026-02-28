@@ -100,6 +100,26 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
         </div>
+
+        {/* User info */}
+        <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/60">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-semibold text-sm shrink-0">
+              {user.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-slate-800 truncate">{user.full_name || user.email}</p>
+              <p className="text-xs text-slate-400 capitalize">{user.role || "visor"}</p>
+            </div>
+            <button
+              onClick={() => base44.auth.logout()}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+              title="Cerrar sesión"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
         <nav className="p-3 space-y-0.5">
           {navItems.map((item) => {
             const isActive = currentPageName === item.page;
