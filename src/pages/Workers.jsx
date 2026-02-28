@@ -275,16 +275,19 @@ export default function Workers() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Cédula / ID</Label>
+                <Label>Cédula / ID *</Label>
                 <Input
                   value={form.id_number}
-                  onChange={e => handleNameOrIdChange(undefined, e.target.value)}
+                  onChange={e => { handleNameOrIdChange(undefined, e.target.value); setErrors(er => ({...er, id_number: ""})); }}
                   placeholder="Identificación"
+                  className={errors.id_number ? "border-red-400" : ""}
                 />
+                {errors.id_number && <p className="text-xs text-red-500 mt-0.5">{errors.id_number}</p>}
               </div>
               <div>
-                <Label>Teléfono</Label>
-                <Input value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} placeholder="Teléfono" />
+                <Label>Teléfono *</Label>
+                <Input value={form.phone} onChange={e => { setForm({...form, phone: e.target.value}); setErrors(er => ({...er, phone: ""})); }} placeholder="Teléfono" className={errors.phone ? "border-red-400" : ""} />
+                {errors.phone && <p className="text-xs text-red-500 mt-0.5">{errors.phone}</p>}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
