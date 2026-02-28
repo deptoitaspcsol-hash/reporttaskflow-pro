@@ -156,9 +156,11 @@ export default function Workers() {
         title="Trabajadores"
         subtitle={`${workers.filter(w => w.status !== "inactivo").length} activos`}
         actions={
-          <Button onClick={() => { setForm(defaultWorker); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-            <Plus className="w-4 h-4" /> Nuevo Trabajador
-          </Button>
+          {canWrite && (
+            <Button onClick={() => { setForm(defaultWorker); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+              <Plus className="w-4 h-4" /> Nuevo Trabajador
+            </Button>
+          )}
         }
       />
 
@@ -200,14 +202,20 @@ export default function Workers() {
                 {w.work_area && <div className="flex items-center gap-2"><span className="text-slate-400">Área:</span> {w.work_area}</div>}
                 {w.base_salary && <div className="flex items-center gap-2"><span className="text-emerald-600 font-medium">${Number(w.base_salary).toLocaleString()}</span></div>}
               </div>
-              <div className="flex gap-2 mt-4 pt-3 border-t border-slate-100">
-                <Button variant="ghost" size="sm" onClick={() => handleEdit(w)} className="text-slate-500 gap-1">
-                  <Pencil className="w-3.5 h-3.5" /> Editar
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(w.id)} className="text-red-500 hover:text-red-600 gap-1">
-                  <Trash2 className="w-3.5 h-3.5" /> Eliminar
-                </Button>
-              </div>
+              {(canWrite || canDelete) && (
+                <div className="flex gap-2 mt-4 pt-3 border-t border-slate-100">
+                  {canWrite && (
+                    <Button variant="ghost" size="sm" onClick={() => handleEdit(w)} className="text-slate-500 gap-1">
+                      <Pencil className="w-3.5 h-3.5" /> Editar
+                    </Button>
+                  )}
+                  {canDelete && (
+                    <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(w.id)} className="text-red-500 hover:text-red-600 gap-1">
+                      <Trash2 className="w-3.5 h-3.5" /> Eliminar
+                    </Button>
+                  )}
+                </div>
+              )}
             </Card>
           ))}
         </div>
