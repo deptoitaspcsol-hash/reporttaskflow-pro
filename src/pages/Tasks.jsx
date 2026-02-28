@@ -35,6 +35,7 @@ export default function Tasks() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [historyTask, setHistoryTask] = useState(null);
+  const [attachmentsTask, setAttachmentsTask] = useState(null);
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
