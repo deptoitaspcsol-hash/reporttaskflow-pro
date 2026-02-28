@@ -8,10 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
+import BulkUploadWorkTypes from "../components/workTypes/BulkUploadWorkTypes";
 
-const defaultWork = { name: "", description: "", unit: "", rate: 0, category: "" };
+const defaultWork = { name: "", description: "", unit: "", rate: 0, category: "", cost_center: "" };
 
 export default function WorkTypes() {
   const { canWrite, canDelete } = useRole();
@@ -42,7 +44,7 @@ export default function WorkTypes() {
 
   const handleEdit = (wt) => {
     setEditing(wt);
-    setForm({ name: wt.name, description: wt.description || "", unit: wt.unit, rate: wt.rate, category: wt.category || "" });
+    setForm({ name: wt.name, description: wt.description || "", unit: wt.unit, rate: wt.rate, category: wt.category || "", cost_center: wt.cost_center || "" });
     setShowForm(true);
   };
 
@@ -60,9 +62,12 @@ export default function WorkTypes() {
         subtitle={`${workTypes.length} labores registradas`}
         actions={
           canWrite ? (
-            <Button onClick={() => { setForm(defaultWork); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-              <Plus className="w-4 h-4" /> Nueva Labor
-            </Button>
+            <div className="flex gap-2">
+              <BulkUploadWorkTypes onDone={() => queryClient.invalidateQueries({ queryKey: ["workTypes"] })} />
+              <Button onClick={() => { setForm(defaultWork); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+                <Plus className="w-4 h-4" /> Nueva Labor
+              </Button>
+            </div>
           ) : null
         }
       />
@@ -76,7 +81,10 @@ export default function WorkTypes() {
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <p className="font-semibold text-slate-800">{wt.name}</p>
-                  {wt.category && <p className="text-xs text-slate-400 mt-0.5">{wt.category}</p>}
+                  <div className="flex gap-2 flex-wrap mt-0.5">
+                    {wt.category && <span className="text-xs text-slate-400">{wt.category}</span>}
+                    {wt.cost_center && <span className="text-xs px-1.5 py-0.5 rounded-full bg-slate-700 text-white">CC {wt.cost_center}</span>}
+                  </div>
                 </div>
                 <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg">
                   <DollarSign className="w-3.5 h-3.5" />
@@ -128,9 +136,25 @@ export default function WorkTypes() {
                 <Input type="number" value={form.rate} onChange={e => setForm({...form, rate: e.target.value})} placeholder="0.00" />
               </div>
             </div>
-            <div>
-              <Label>Categoría</Label>
-              <Input value={form.category} onChange={e => setForm({...form, category: e.target.value})} placeholder="Ej: Construcción" />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Categoría</Label>
+                <Input value={form.category} onChange={e => setForm({...form, category: e.target.value})} placeholder="Ej: Construcción" />
+              </div>
+              <div>
+                <Label>Centro de Costo</Label>
+                <Select value={form.cost_center} onValueChange={(val) => setForm({...form, cost_center: val})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>Ninguno</SelectItem>
+                    <SelectItem value="1">Centro 1</SelectItem>
+                    <SelectItem value="2">Centro 2</SelectItem>
+                    <SelectItem value="3">Centro 3</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
           <DialogFooter>
