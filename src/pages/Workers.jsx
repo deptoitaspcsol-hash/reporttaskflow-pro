@@ -52,7 +52,54 @@ export default function Workers() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workers"] }),
   });
 
-  const closeForm = () => { setShowForm(false); setEditing(null); setForm(defaultWorker); };
+  const closeForm = () => {
+    stopCamera();
+    setShowForm(false);
+    setEditing(null);
+    setForm(defaultWorker);
+    setShowCamera(false);
+  };
+
+  const startCamera = async () => {
+    setShowCamera(true);
+    setTimeout(async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      streamRef.current = stream;
+      if (videoRef.current) videoRef.current.srcObject = stream;
+    }, 100);
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
+    }
+    setShowCamera(false);
+  };
+
+  const capturePhoto = async () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    canvas.getContext("2d").drawImage(videoRef.current, 0, 0);
+    canvas.toBlob(async (blob) => {
+      stopCamera();
+      setUploadingPhoto(true);
+      const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setForm(f => ({ ...f, photo_url: file_url }));
+      setUploadingPhoto(false);
+    }, "image/jpeg", 0.85);
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingPhoto(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setForm(f => ({ ...f, photo_url: file_url }));
+    setUploadingPhoto(false);
+  };
 
   const handleEdit = (w) => {
     setEditing(w);
