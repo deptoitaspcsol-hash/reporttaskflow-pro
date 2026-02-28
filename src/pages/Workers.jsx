@@ -292,12 +292,14 @@ export default function Workers() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Fecha de Ingreso</Label>
-                <Input type="date" value={form.hire_date} onChange={e => setForm({...form, hire_date: e.target.value})} />
+                <Label>Fecha de Ingreso *</Label>
+                <Input type="date" value={form.hire_date} onChange={e => { setForm({...form, hire_date: e.target.value}); setErrors(er => ({...er, hire_date: ""})); }} className={errors.hire_date ? "border-red-400" : ""} />
+                {errors.hire_date && <p className="text-xs text-red-500 mt-0.5">{errors.hire_date}</p>}
               </div>
               <div>
-                <Label>Salario Base</Label>
-                <Input type="number" value={form.base_salary} onChange={e => setForm({...form, base_salary: e.target.value})} placeholder="0.00" />
+                <Label>Salario Base *</Label>
+                <Input type="number" value={form.base_salary} onChange={e => { setForm({...form, base_salary: e.target.value}); setErrors(er => ({...er, base_salary: ""})); }} placeholder="0.00" className={errors.base_salary ? "border-red-400" : ""} />
+                {errors.base_salary && <p className="text-xs text-red-500 mt-0.5">{errors.base_salary}</p>}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
