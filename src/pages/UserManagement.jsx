@@ -88,7 +88,7 @@ export default function UserManagement() {
         subtitle={`${users.length} usuarios registrados`}
         actions={
           <Button onClick={() => setShowInvite(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-            <Mail className="w-4 h-4" /> Invitar Usuario
+            <UserPlus className="w-4 h-4" /> Agregar Usuario
           </Button>
         }
       />
