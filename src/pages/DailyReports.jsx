@@ -28,7 +28,7 @@ export default function DailyReports() {
   const [filterLocation, setFilterLocation] = useState("all");
   const [form, setForm] = useState({
     date: format(new Date(), "yyyy-MM-dd"),
-    worker_id: "", work_type_id: "", location: "", quantity: "", notes: ""
+    worker_id: "", work_type_id: "", location: "", quantity: "", progress: "", notes: ""
   });
   const printRef = useRef();
   const queryClient = useQueryClient();
