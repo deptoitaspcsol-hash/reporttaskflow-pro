@@ -38,6 +38,7 @@ export default function Tasks() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [historyTask, setHistoryTask] = useState(null);
   const [attachmentsTask, setAttachmentsTask] = useState(null);
+  const [viewMode, setViewMode] = useState("list"); // "list" | "calendar"
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
