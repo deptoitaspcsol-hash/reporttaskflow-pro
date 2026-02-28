@@ -104,6 +104,11 @@ export default function UserManagement() {
                 <div>
                   <p className="font-semibold text-slate-800 text-sm">{u.full_name || "Sin nombre"}</p>
                   <p className="text-xs text-slate-400">{u.email}</p>
+                  {u.job_title && (
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                      <Briefcase className="w-3 h-3" />{u.job_title}
+                    </p>
+                  )}
                 </div>
               </div>
               <RoleBadge role={u.role || "visor"} />
