@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Home,
   ShieldCheck,
+  Shield,
   LogOut,
   Loader2
 } from "lucide-react";
