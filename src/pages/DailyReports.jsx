@@ -44,9 +44,19 @@ export default function DailyReports() {
     queryFn: () => base44.entities.DailyReport.list("-date", 500),
   });
 
+  const getCurrentUser = async () => {
+    try { const u = await base44.auth.me(); return u?.email || ""; } catch { return ""; }
+  };
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.DailyReport.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["reports"] }); setShowForm(false); resetForm(); },
+    onSuccess: async (created) => {
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+      setShowForm(false);
+      resetForm();
+      const userEmail = await getCurrentUser();
+      saveHistorialCreated({ entityType: "DailyReport", entityId: created.id, entityLabel: `${created.worker_name} — ${created.date}`, userEmail });
+    },
   });
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.DailyReport.delete(id),
