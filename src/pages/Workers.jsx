@@ -66,7 +66,9 @@ export default function Workers() {
   };
 
   const handleNameOrIdChange = (newName, newId) => {
-    const code = generateWorkerCode(newName, newId);
+    const resolvedName = newName !== undefined ? newName : form.full_name;
+    const resolvedId = newId !== undefined ? newId : form.id_number;
+    const code = generateWorkerCode(resolvedName, resolvedId);
     setForm(f => ({ ...f, full_name: newName !== undefined ? newName : f.full_name, id_number: newId !== undefined ? newId : f.id_number, worker_code: code }));
   };
 
