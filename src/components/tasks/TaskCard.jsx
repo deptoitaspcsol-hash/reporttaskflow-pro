@@ -32,6 +32,9 @@ export default function TaskCard({ task, onEdit, onDelete, onHistory }) {
             )}
           </div>
           <div className="flex gap-1 shrink-0">
+            <Button size="icon" variant="ghost" className="h-7 w-7 text-slate-400 hover:text-slate-600" onClick={onHistory} title="Ver historial">
+              <History className="w-3.5 h-3.5" />
+            </Button>
             <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => onEdit(task)}>
               <Pencil className="w-3.5 h-3.5" />
             </Button>
