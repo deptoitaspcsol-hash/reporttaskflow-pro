@@ -29,6 +29,7 @@ export default function Workers() {
   const [search, setSearch] = useState("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
+  const [errors, setErrors] = useState({});
   const videoRef = React.useRef(null);
   const streamRef = React.useRef(null);
   const photoInputRef = React.useRef(null);
