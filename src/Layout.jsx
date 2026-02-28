@@ -37,6 +37,27 @@ const navItems = [
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    base44.auth.me()
+      .then(u => { setUser(u); setAuthLoading(false); })
+      .catch(() => { setUser(null); setAuthLoading(false); });
+  }, []);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    base44.auth.redirectToLogin();
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
