@@ -138,9 +138,11 @@ export default function Tasks() {
                 Calendario
               </Button>
             </div>
-            <Button onClick={() => setShowForm(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-              <Plus className="w-4 h-4" /> Nueva Tarea
-            </Button>
+            {canWrite && (
+              <Button onClick={() => setShowForm(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+                <Plus className="w-4 h-4" /> Nueva Tarea
+              </Button>
+            )}
           </div>
         }
       />
@@ -191,8 +193,8 @@ export default function Tasks() {
                   <TaskCard
                     key={task.id}
                     task={task}
-                    onEdit={handleEdit}
-                    onDelete={deleteMutation.mutate}
+                    onEdit={canWrite ? handleEdit : null}
+                    onDelete={canDelete ? deleteMutation.mutate : null}
                     onHistory={() => setHistoryTask(task)}
                     onAttachments={() => setAttachmentsTask(task)}
                   />
