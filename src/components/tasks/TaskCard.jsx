@@ -38,12 +38,16 @@ export default function TaskCard({ task, onEdit, onDelete, onHistory, onAttachme
             <Button size="icon" variant="ghost" className="h-7 w-7 text-slate-400 hover:text-slate-600" onClick={onHistory} title="Ver historial">
               <History className="w-3.5 h-3.5" />
             </Button>
-            <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => onEdit(task)}>
-              <Pencil className="w-3.5 h-3.5" />
-            </Button>
-            <Button size="icon" variant="ghost" className="h-7 w-7 text-red-400 hover:text-red-600" onClick={() => onDelete(task.id)}>
-              <Trash2 className="w-3.5 h-3.5" />
-            </Button>
+            {onEdit && (
+              <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => onEdit(task)}>
+                <Pencil className="w-3.5 h-3.5" />
+              </Button>
+            )}
+            {onDelete && (
+              <Button size="icon" variant="ghost" className="h-7 w-7 text-red-400 hover:text-red-600" onClick={() => onDelete(task.id)}>
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            )}
           </div>
         </div>
 
