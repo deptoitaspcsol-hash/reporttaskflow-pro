@@ -137,11 +137,11 @@ export default function UserManagement() {
       <Dialog open={showInvite} onOpenChange={setShowInvite}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>Invitar Usuario</DialogTitle>
+            <DialogTitle className="flex items-center gap-2"><UserPlus className="w-5 h-5" /> Agregar Usuario</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div>
-              <Label>Correo electrónico</Label>
+              <Label>Correo electrónico *</Label>
               <Input
                 type="email"
                 value={inviteEmail}
@@ -150,7 +150,15 @@ export default function UserManagement() {
               />
             </div>
             <div>
-              <Label>Rol inicial</Label>
+              <Label>Puesto de trabajo</Label>
+              <Input
+                value={inviteJobTitle}
+                onChange={e => setInviteJobTitle(e.target.value)}
+                placeholder="Ej: Supervisor de campo, Contador..."
+              />
+            </div>
+            <div>
+              <Label>Rol de acceso</Label>
               <Select value={inviteRole} onValueChange={setInviteRole}>
                 <SelectTrigger>
                   <SelectValue />
@@ -162,6 +170,13 @@ export default function UserManagement() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex items-center justify-between bg-slate-50 rounded-lg px-3 py-2.5">
+              <div>
+                <p className="text-sm font-medium text-slate-700">Enviar correo de invitación</p>
+                <p className="text-xs text-slate-400">El usuario recibirá un email para acceder</p>
+              </div>
+              <Switch checked={sendEmail} onCheckedChange={setSendEmail} />
+            </div>
             <div className="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 space-y-1">
               <p><strong className="text-violet-700">Admin:</strong> Acceso total, puede eliminar y gestionar usuarios.</p>
               <p><strong className="text-blue-700">Capturista:</strong> Puede crear y editar registros, no puede eliminar.</p>
@@ -171,7 +186,7 @@ export default function UserManagement() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowInvite(false)}>Cancelar</Button>
             <Button onClick={handleInvite} disabled={inviting || !inviteEmail.trim()} className="bg-emerald-600 hover:bg-emerald-700">
-              {inviting ? "Enviando..." : "Enviar invitación"}
+              {inviting ? "Procesando..." : sendEmail ? "Enviar invitación" : "Crear usuario"}
             </Button>
           </DialogFooter>
         </DialogContent>
