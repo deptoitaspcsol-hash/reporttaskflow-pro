@@ -112,7 +112,8 @@ export default function Workers() {
       work_area: w.work_area || "",
       hire_date: w.hire_date || "",
       base_salary: w.base_salary ?? "",
-      status: w.status || "activo"
+      status: w.status || "activo",
+      photo_url: w.photo_url || ""
     });
     setShowForm(true);
   };
