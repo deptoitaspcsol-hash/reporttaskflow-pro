@@ -12,6 +12,7 @@ import TaskCard from "../components/tasks/TaskCard";
 import TaskForm from "../components/tasks/TaskForm";
 import HistoryLog from "../components/shared/HistoryLog";
 import { saveHistorialChanges, saveHistorialCreated } from "../components/shared/useHistorial";
+import AttachmentsSection from "../components/shared/AttachmentsSection";
 
 const STATUSES = [
   { value: "all", label: "Todos los estados" },
