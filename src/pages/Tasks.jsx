@@ -46,6 +46,8 @@ export default function Tasks() {
     queryFn: () => base44.entities.Task.list("-created_date", 200),
   });
 
+  const { checkStatusChange } = useTaskNotifications(tasks);
+
   const getCurrentUser = async () => {
     try { const u = await base44.auth.me(); return u?.email || ""; } catch { return ""; }
   };
