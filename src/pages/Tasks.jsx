@@ -167,6 +167,8 @@ export default function Tasks() {
 
       {isLoading ? (
         <div className="text-center py-16 text-slate-400">Cargando tareas...</div>
+      ) : viewMode === "calendar" ? (
+        <TaskCalendarView tasks={filtered} onEditTask={handleEdit} />
       ) : filtered.length === 0 ? (
         <EmptyState icon={ListTodo} title="No hay tareas" description="Crea la primera tarea para comenzar." />
       ) : (
