@@ -2,7 +2,9 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, User, Users, Paperclip, Pencil, Trash2, History } from "lucide-react";
+import { Calendar, MapPin, User, Users, Paperclip, Pencil, Trash2, History, CheckCircle2 } from "lucide-react";
+import TaskDueDate from "./TaskDueDate";
+import TaskPriorityBadge from "./TaskPriorityBadge";
 
 const STATUS_CONFIG = {
   pendiente:   { label: "Pendiente",   className: "bg-amber-100 text-amber-700 border-amber-200" },
@@ -38,6 +40,11 @@ export default function TaskCard({ task, onEdit, onDelete, onHistory, onAttachme
             <Button size="icon" variant="ghost" className="h-7 w-7 text-slate-400 hover:text-slate-600" onClick={onHistory} title="Ver historial">
               <History className="w-3.5 h-3.5" />
             </Button>
+            {onEdit && task.status !== "completada" && (
+              <Button size="icon" variant="ghost" className="h-7 w-7 text-emerald-600 hover:text-emerald-700" onClick={() => { const newTask = { ...task, status: "completada" }; onEdit(newTask); }} title="Marcar como completada">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              </Button>
+            )}
             {onEdit && (
               <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => onEdit(task)}>
                 <Pencil className="w-3.5 h-3.5" />
@@ -53,7 +60,8 @@ export default function TaskCard({ task, onEdit, onDelete, onHistory, onAttachme
 
         <div className="flex flex-wrap gap-1.5 mb-3">
           <Badge className={`text-xs border ${status.className}`}>{status.label}</Badge>
-          <Badge className={`text-xs ${priority.className}`}>{priority.label}</Badge>
+          <TaskPriorityBadge priority={task.priority} />
+          {task.end_date && <TaskDueDate endDate={task.end_date} status={task.status} compact />}
         </div>
 
         <div className="space-y-1.5 text-xs text-slate-500">
@@ -63,10 +71,10 @@ export default function TaskCard({ task, onEdit, onDelete, onHistory, onAttachme
               <span className="truncate">{task.location}</span>
             </div>
           )}
-          {(task.worker_name || task.group_name) && (
+          {(task.worker_names?.length || task.group_name) && (
             <div className="flex items-center gap-1.5">
               {task.assigned_to === "group" ? <Users className="w-3.5 h-3.5 shrink-0" /> : <User className="w-3.5 h-3.5 shrink-0" />}
-              <span className="truncate">{task.assigned_to === "group" ? task.group_name : task.worker_name}</span>
+              <span className="truncate">{task.assigned_to === "group" ? task.group_name : (task.worker_names || []).join(", ") || task.worker_name}</span>
             </div>
           )}
           {task.start_date && (
