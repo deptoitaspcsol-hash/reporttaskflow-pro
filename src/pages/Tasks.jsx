@@ -178,6 +178,31 @@ export default function Tasks() {
         </DialogContent>
       </Dialog>
 
+      {/* Attachments Dialog */}
+      <Dialog open={!!attachmentsTask} onOpenChange={open => { if (!open) setAttachmentsTask(null); }}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Paperclip className="w-4 h-4 text-slate-500" />
+              Archivos — {attachmentsTask?.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-2">
+            {attachmentsTask && (
+              <AttachmentsSection
+                attachments={attachmentsTask.attachments || []}
+                onUpdate={(newAtts) => {
+                  updateMutation.mutate(
+                    { id: attachmentsTask.id, data: { attachments: newAtts }, oldData: attachmentsTask },
+                    { onSuccess: (updated) => setAttachmentsTask({ ...attachmentsTask, attachments: newAtts }) }
+                  );
+                }}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* History Dialog */}
       <Dialog open={!!historyTask} onOpenChange={open => { if (!open) setHistoryTask(null); }}>
         <DialogContent className="max-w-lg">
