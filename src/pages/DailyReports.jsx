@@ -17,6 +17,7 @@ import EmptyState from "../components/shared/EmptyState";
 import PrintButton from "../components/shared/PrintButton";
 import HistoryLog from "../components/shared/HistoryLog";
 import { saveHistorialCreated } from "../components/shared/useHistorial";
+import AttachmentsSection from "../components/shared/AttachmentsSection";
 
 export default function DailyReports() {
   const [showForm, setShowForm] = useState(false);
