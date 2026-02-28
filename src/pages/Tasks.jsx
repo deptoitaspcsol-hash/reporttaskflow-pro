@@ -15,6 +15,10 @@ import HistoryLog from "../components/shared/HistoryLog";
 import { saveHistorialChanges, saveHistorialCreated } from "../components/shared/useHistorial";
 import AttachmentsSection from "../components/shared/AttachmentsSection";
 import TaskCalendarView from "../components/tasks/TaskCalendarView";
+import TaskGroupFilter from "../components/tasks/TaskGroupFilter";
+import TasksByWorker from "../components/tasks/TasksByWorker";
+import TaskDueDate from "../components/tasks/TaskDueDate";
+import TaskPriorityBadge from "../components/tasks/TaskPriorityBadge";
 import { useTaskNotifications } from "../components/notifications/useTaskNotifications";
 
 const STATUSES = [
@@ -42,6 +46,7 @@ export default function Tasks() {
   const [historyTask, setHistoryTask] = useState(null);
   const [attachmentsTask, setAttachmentsTask] = useState(null);
   const [viewMode, setViewMode] = useState("list"); // "list" | "calendar"
+  const [groupBy, setGroupBy] = useState("status"); // "status" | "worker"
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
@@ -117,7 +122,7 @@ export default function Tasks() {
         title="Tareas"
         subtitle={`${total} tareas registradas`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <div className="flex rounded-lg border border-slate-200 overflow-hidden">
               <Button
                 variant={viewMode === "list" ? "default" : "ghost"}
@@ -138,6 +143,7 @@ export default function Tasks() {
                 Calendario
               </Button>
             </div>
+            {viewMode === "list" && <TaskGroupFilter value={groupBy} onChange={setGroupBy} />}
             {canWrite ? (
               <Button onClick={() => setShowForm(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
                 <Plus className="w-4 h-4" /> Nueva Tarea
@@ -177,6 +183,14 @@ export default function Tasks() {
         <div className="text-center py-16 text-slate-400">Cargando tareas...</div>
       ) : viewMode === "calendar" ? (
         <TaskCalendarView tasks={filtered} onEditTask={handleEdit} />
+      ) : groupBy === "worker" ? (
+        <TasksByWorker
+          tasks={filtered}
+          onEdit={canWrite ? handleEdit : null}
+          onDelete={canDelete ? deleteMutation.mutate : null}
+          onHistory={() => {}}
+          onAttachments={() => {}}
+        />
       ) : filtered.length === 0 ? (
         <EmptyState icon={ListTodo} title="No hay tareas" description="Crea la primera tarea para comenzar." />
       ) : (

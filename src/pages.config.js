@@ -52,12 +52,12 @@ import Dashboard from './pages/Dashboard';
 import PaymentClosings from './pages/PaymentClosings';
 import PaymentHistory from './pages/PaymentHistory';
 import Reports from './pages/Reports';
+import RoleManagement from './pages/RoleManagement';
 import Tasks from './pages/Tasks';
 import UserManagement from './pages/UserManagement';
 import WorkTypes from './pages/WorkTypes';
 import WorkerGroups from './pages/WorkerGroups';
 import Workers from './pages/Workers';
-import RoleManagement from './pages/RoleManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -67,12 +67,12 @@ export const PAGES = {
     "PaymentClosings": PaymentClosings,
     "PaymentHistory": PaymentHistory,
     "Reports": Reports,
+    "RoleManagement": RoleManagement,
     "Tasks": Tasks,
     "UserManagement": UserManagement,
     "WorkTypes": WorkTypes,
     "WorkerGroups": WorkerGroups,
     "Workers": Workers,
-    "RoleManagement": RoleManagement,
 }
 
 export const pagesConfig = {
