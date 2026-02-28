@@ -81,6 +81,7 @@ export default function Tasks() {
 
   const handleSubmit = async (data) => {
     if (editingTask) {
+      checkStatusChange(editingTask, data);
       updateMutation.mutate({ id: editingTask.id, data, oldData: editingTask });
     } else {
       createMutation.mutate(data);
