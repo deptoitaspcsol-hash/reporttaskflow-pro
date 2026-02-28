@@ -59,8 +59,9 @@ export default function Workers() {
 
   const handleSubmit = () => {
     if (!form.full_name.trim()) return;
-    if (editing) updateMutation.mutate({ id: editing.id, data: form });
-    else createMutation.mutate(form);
+    const data = { ...form, base_salary: form.base_salary !== "" ? Number(form.base_salary) : undefined };
+    if (editing) updateMutation.mutate({ id: editing.id, data });
+    else createMutation.mutate(data);
   };
 
   const groups = [...new Set(workers.map(w => w.group).filter(Boolean))];
