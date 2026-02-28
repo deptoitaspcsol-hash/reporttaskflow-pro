@@ -305,13 +305,25 @@ export default function DailyReports() {
               </div>
             </div>
             <div>
+              <Label>Grupo</Label>
+              <Select value={form.formGroup} onValueChange={v => setForm({...form, formGroup: v, worker_id: ""})}>
+                <SelectTrigger><SelectValue placeholder="Filtrar por grupo (opcional)" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los grupos</SelectItem>
+                  {groups.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
               <Label>Trabajador *</Label>
               <Select value={form.worker_id} onValueChange={v => setForm({...form, worker_id: v})}>
                 <SelectTrigger><SelectValue placeholder="Seleccionar trabajador" /></SelectTrigger>
                 <SelectContent>
-                  {activeWorkers.map(w => (
-                    <SelectItem key={w.id} value={w.id}>{w.full_name} {w.group ? `(${w.group})` : ""}</SelectItem>
-                  ))}
+                  {activeWorkers
+                    .filter(w => !form.formGroup || form.formGroup === "all" || w.group === form.formGroup)
+                    .map(w => (
+                      <SelectItem key={w.id} value={w.id}>{w.full_name} {w.group ? `(${w.group})` : ""}</SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
