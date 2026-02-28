@@ -72,7 +72,7 @@ export default function DailyReports() {
     },
   });
 
-  const resetForm = () => setForm({ date: format(new Date(), "yyyy-MM-dd"), worker_id: "", work_type_id: "", location: "", quantity: "", progress: "", notes: "" });
+  const resetForm = () => setForm({ date: format(new Date(), "yyyy-MM-dd"), worker_id: "", work_type_id: "", location: "", quantity: "", progress: "", notes: "", formGroup: "" });
 
   const handleSubmit = () => {
     const worker = workers.find(w => w.id === form.worker_id);
