@@ -14,6 +14,7 @@ import EmptyState from "../components/shared/EmptyState";
 const defaultWork = { name: "", description: "", unit: "", rate: 0, category: "" };
 
 export default function WorkTypes() {
+  const { canWrite, canDelete } = useRole();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultWork);

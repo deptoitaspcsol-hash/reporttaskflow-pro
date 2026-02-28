@@ -33,6 +33,7 @@ const STATUS_COLORS = {
 };
 
 export default function Tasks() {
+  const { canWrite, canDelete } = useRole();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);

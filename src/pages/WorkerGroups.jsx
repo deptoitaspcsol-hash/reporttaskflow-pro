@@ -28,6 +28,7 @@ const GROUP_COLORS = [
 const defaultForm = { name: "", supervisor_name: "", supervisor_phone: "", description: "", color: "#10b981", status: "activo" };
 
 export default function WorkerGroups() {
+  const { canWrite, canDelete } = useRole();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultForm);

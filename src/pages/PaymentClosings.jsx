@@ -18,6 +18,7 @@ import EmptyState from "../components/shared/EmptyState";
 import PrintButton from "../components/shared/PrintButton";
 
 export default function PaymentClosings() {
+  const { canWrite, canDelete } = useRole();
   const [showCreate, setShowCreate] = useState(false);
   const [showDetail, setShowDetail] = useState(null);
   const [closingForm, setClosingForm] = useState({

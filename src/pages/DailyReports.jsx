@@ -21,6 +21,7 @@ import { saveHistorialCreated } from "../components/shared/useHistorial";
 import AttachmentsSection from "../components/shared/AttachmentsSection";
 
 export default function DailyReports() {
+  const { canWrite, canDelete } = useRole();
   const [showForm, setShowForm] = useState(false);
   const [historyReport, setHistoryReport] = useState(null);
   const [detailReport, setDetailReport] = useState(null);
