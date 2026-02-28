@@ -329,20 +329,47 @@ export default function DailyReports() {
                 <Label>Cantidad *</Label>
                 <Input type="number" value={form.quantity} onChange={e => setForm({...form, quantity: e.target.value})} placeholder="0" />
               </div>
-              <div className="flex items-end">
-                {form.work_type_id && form.quantity && (() => {
-                  const wt = workTypes.find(w => w.id === form.work_type_id);
-                  if (!wt) return null;
-                  const total = Number(form.quantity) * wt.rate;
-                  return (
-                    <div className="bg-emerald-50 rounded-lg px-4 py-2.5 w-full text-center">
-                      <p className="text-xs text-emerald-600">Monto</p>
-                      <p className="text-lg font-bold text-emerald-700">${total.toLocaleString()}</p>
-                    </div>
-                  );
-                })()}
+              <div>
+                <Label>Avance (%)</Label>
+                <Input
+                  type="number"
+                  min="0" max="100"
+                  value={form.progress}
+                  onChange={e => setForm({...form, progress: e.target.value})}
+                  placeholder="0 - 100"
+                />
               </div>
             </div>
+
+            {/* Resumen de cálculos */}
+            {(form.work_type_id && form.quantity) && (() => {
+              const wt = workTypes.find(w => w.id === form.work_type_id);
+              const worker = workers.find(w => w.id === form.worker_id);
+              if (!wt) return null;
+              const amount = Number(form.quantity) * wt.rate;
+              const progress = form.progress !== "" ? Number(form.progress) : null;
+              const baseSalary = worker?.base_salary || 0;
+              const salaryPayment = (progress !== null && baseSalary) ? (progress / 100) * baseSalary : null;
+              return (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-emerald-50 rounded-lg px-4 py-2.5 text-center">
+                    <p className="text-xs text-emerald-600">Monto por cantidad</p>
+                    <p className="text-lg font-bold text-emerald-700">${amount.toLocaleString()}</p>
+                  </div>
+                  {salaryPayment !== null ? (
+                    <div className="bg-blue-50 rounded-lg px-4 py-2.5 text-center">
+                      <p className="text-xs text-blue-600">Pago por avance</p>
+                      <p className="text-lg font-bold text-blue-700">${salaryPayment.toLocaleString()}</p>
+                      <p className="text-xs text-blue-400">{progress}% de ${baseSalary.toLocaleString()}</p>
+                    </div>
+                  ) : form.worker_id && !baseSalary ? (
+                    <div className="bg-amber-50 rounded-lg px-4 py-2.5 text-center flex items-center justify-center">
+                      <p className="text-xs text-amber-600">Sin sueldo base registrado</p>
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })()}
             <div>
               <Label>Observaciones</Label>
               <Textarea value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} placeholder="Notas adicionales..." rows={2} />
