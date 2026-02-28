@@ -14,7 +14,8 @@ import {
   Menu,
   X,
   ChevronRight,
-  Home
+  Home,
+  ShieldCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
@@ -29,6 +30,7 @@ const navItems = [
   { name: "Cierres de Pago", page: "PaymentClosings", icon: CreditCard },
   { name: "Historial de Pagos", page: "PaymentHistory", icon: History },
   { name: "Reportes", page: "Reports", icon: BarChart3 },
+  { name: "Usuarios", page: "UserManagement", icon: ShieldCheck },
 ];
 
 export default function Layout({ children, currentPageName }) {
