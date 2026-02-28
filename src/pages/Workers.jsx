@@ -316,11 +316,12 @@ export default function Workers() {
                 </datalist>
               </div>
               <div>
-                <Label>Grupo</Label>
-                <Input value={form.group} onChange={e => setForm({...form, group: e.target.value})} placeholder="Ej: Cuadrilla A" list="groups-list" />
+                <Label>Grupo *</Label>
+                <Input value={form.group} onChange={e => { setForm({...form, group: e.target.value}); setErrors(er => ({...er, group: ""})); }} placeholder="Ej: Cuadrilla A" list="groups-list" className={errors.group ? "border-red-400" : ""} />
                 <datalist id="groups-list">
                   {groups.map(g => <option key={g} value={g} />)}
                 </datalist>
+                {errors.group && <p className="text-xs text-red-500 mt-0.5">{errors.group}</p>}
               </div>
             </div>
             <div>
