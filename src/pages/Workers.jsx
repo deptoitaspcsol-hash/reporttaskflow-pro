@@ -242,14 +242,17 @@ export default function Workers() {
                   </div>
                 </div>
               ) : (
-                <div className="flex gap-2">
-                  <Button type="button" size="sm" variant="outline" onClick={() => photoInputRef.current?.click()} disabled={uploadingPhoto} className="gap-1">
-                    <Upload className="w-3.5 h-3.5" /> Subir imagen
-                  </Button>
-                  <Button type="button" size="sm" variant="outline" onClick={startCamera} disabled={uploadingPhoto} className="gap-1">
-                    <Camera className="w-3.5 h-3.5" /> Cámara
-                  </Button>
-                  <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex gap-2">
+                    <Button type="button" size="sm" variant="outline" onClick={() => photoInputRef.current?.click()} disabled={uploadingPhoto} className="gap-1">
+                      <Upload className="w-3.5 h-3.5" /> Subir imagen
+                    </Button>
+                    <Button type="button" size="sm" variant="outline" onClick={startCamera} disabled={uploadingPhoto} className="gap-1">
+                      <Camera className="w-3.5 h-3.5" /> Cámara
+                    </Button>
+                    <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+                  </div>
+                  {errors.photo_url && <p className="text-xs text-red-500">{errors.photo_url}</p>}
                 </div>
               )}
             </div>
