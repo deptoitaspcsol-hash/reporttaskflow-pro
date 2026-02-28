@@ -124,9 +124,11 @@ export default function DailyReports() {
         actions={
           <div className="flex gap-2">
             <PrintButton contentRef={printRef} />
-            <Button onClick={() => { resetForm(); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-              <Plus className="w-4 h-4" /> Agregar Tarea
-            </Button>
+            {canWrite && (
+              <Button onClick={() => { resetForm(); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+                <Plus className="w-4 h-4" /> Agregar Tarea
+              </Button>
+            )}
           </div>
         }
       />
@@ -220,7 +222,7 @@ export default function DailyReports() {
                           <Button variant="ghost" size="icon" onClick={() => setHistoryReport(r)} className="text-slate-400 hover:text-slate-600 h-8 w-8" title="Ver historial">
                             <History className="w-3.5 h-3.5" />
                           </Button>
-                          {r.status !== "cerrado" && (
+                          {r.status !== "cerrado" && canDelete && (
                             <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(r.id)} className="text-red-400 hover:text-red-600 h-8 w-8">
                               <Trash2 className="w-3.5 h-3.5" />
                             </Button>
