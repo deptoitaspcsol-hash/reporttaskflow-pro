@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 
-const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", status: "activo" };
+const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", status: "activo", photo_url: "" };
 
 const generateWorkerCode = (fullName, idNumber) => {
   const nameParts = (fullName || "").trim().split(/\s+/).filter(Boolean);
