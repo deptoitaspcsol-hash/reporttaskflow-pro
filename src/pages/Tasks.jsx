@@ -111,9 +111,31 @@ export default function Tasks() {
         title="Tareas"
         subtitle={`${total} tareas registradas`}
         actions={
-          <Button onClick={() => setShowForm(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-            <Plus className="w-4 h-4" /> Nueva Tarea
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+              <Button
+                variant={viewMode === "list" ? "default" : "ghost"}
+                size="sm"
+                className={`rounded-none gap-1.5 ${viewMode === "list" ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
+                onClick={() => setViewMode("list")}
+              >
+                <LayoutList className="w-3.5 h-3.5" />
+                Lista
+              </Button>
+              <Button
+                variant={viewMode === "calendar" ? "default" : "ghost"}
+                size="sm"
+                className={`rounded-none gap-1.5 ${viewMode === "calendar" ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
+                onClick={() => setViewMode("calendar")}
+              >
+                <CalendarDays className="w-3.5 h-3.5" />
+                Calendario
+              </Button>
+            </div>
+            <Button onClick={() => setShowForm(true)} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+              <Plus className="w-4 h-4" /> Nueva Tarea
+            </Button>
+          </div>
         }
       />
 
