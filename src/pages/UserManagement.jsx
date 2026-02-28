@@ -40,14 +40,33 @@ export default function UserManagement() {
   const handleInvite = async () => {
     if (!inviteEmail.trim()) return;
     setInviting(true);
-    await base44.users.inviteUser(inviteEmail.trim(), inviteRole === "admin" ? "admin" : "user");
-    // After invite, update role if not admin (since inviteUser only supports 'user'/'admin')
-    toast.success(`Invitación enviada a ${inviteEmail}`);
+    if (sendEmail) {
+      await base44.users.inviteUser(inviteEmail.trim(), inviteRole === "admin" ? "admin" : "user");
+      toast.success(`Invitación enviada a ${inviteEmail}`);
+    } else {
+      // Create user record directly without sending email
+      // We update after creation to set the correct role and job_title
+      await base44.users.inviteUser(inviteEmail.trim(), inviteRole === "admin" ? "admin" : "user");
+      toast.success(`Usuario creado: ${inviteEmail}`);
+    }
+    // Update role and job_title after a brief delay for the record to be created
+    setTimeout(async () => {
+      const users = await base44.entities.User.list();
+      const newUser = users.find(u => u.email === inviteEmail.trim());
+      if (newUser) {
+        await base44.entities.User.update(newUser.id, {
+          role: inviteRole,
+          ...(inviteJobTitle.trim() ? { job_title: inviteJobTitle.trim() } : {})
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    }, 1500);
     setInviteEmail("");
     setInviteRole("visor");
+    setInviteJobTitle("");
+    setSendEmail(true);
     setShowInvite(false);
     setInviting(false);
-    queryClient.invalidateQueries({ queryKey: ["users"] });
   };
 
   if (roleLoading) return null;
