@@ -231,6 +231,36 @@ export default function DailyReports() {
         </Card>
       </div>
 
+      {/* Detail + Attachments Dialog */}
+      <Dialog open={!!detailReport} onOpenChange={open => { if (!open) setDetailReport(null); }}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Paperclip className="w-4 h-4 text-slate-500" />
+              Detalle — {detailReport?.worker_name} ({detailReport?.date})
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div><span className="text-slate-500">Labor:</span> <span className="font-medium text-slate-800">{detailReport?.work_type_name}</span></div>
+              <div><span className="text-slate-500">Ubicación:</span> <span className="font-medium text-slate-800">{detailReport?.location || "—"}</span></div>
+              <div><span className="text-slate-500">Cantidad:</span> <span className="font-medium text-slate-800">{detailReport?.quantity} {detailReport?.unit}</span></div>
+              <div><span className="text-slate-500">Monto:</span> <span className="font-semibold text-emerald-700">${(detailReport?.amount || 0).toLocaleString()}</span></div>
+            </div>
+            {detailReport?.notes && (
+              <div className="text-sm text-slate-600 bg-slate-50 rounded-lg p-3">{detailReport.notes}</div>
+            )}
+            <AttachmentsSection
+              attachments={detailReport?.attachments || []}
+              readOnly={detailReport?.status === "cerrado"}
+              onUpdate={(newAtts) => {
+                if (detailReport) updateMutation.mutate({ id: detailReport.id, data: { attachments: newAtts } });
+              }}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* History Dialog */}
       <Dialog open={!!historyReport} onOpenChange={open => { if (!open) setHistoryReport(null); }}>
         <DialogContent className="sm:max-w-lg">
