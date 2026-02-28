@@ -14,6 +14,14 @@ import EmptyState from "../components/shared/EmptyState";
 
 const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", status: "activo" };
 
+const generateWorkerCode = (fullName, idNumber) => {
+  const nameParts = fullName.trim().split(/\s+/).filter(Boolean);
+  const initials = nameParts.map(p => p.charAt(0).toUpperCase()).join("");
+  const idSuffix = idNumber ? String(idNumber).replace(/\D/g, "").slice(-4) : "";
+  if (initials && idSuffix) return `${initials}-${idSuffix}`;
+  return initials;
+};
+
 export default function Workers() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -55,6 +63,11 @@ export default function Workers() {
       status: w.status || "activo"
     });
     setShowForm(true);
+  };
+
+  const handleNameOrIdChange = (newName, newId) => {
+    const code = generateWorkerCode(newName, newId);
+    setForm(f => ({ ...f, full_name: newName !== undefined ? newName : f.full_name, id_number: newId !== undefined ? newId : f.id_number, worker_code: code }));
   };
 
   const handleSubmit = () => {
@@ -138,17 +151,30 @@ export default function Workers() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Nombre Completo *</Label>
-                <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} placeholder="Nombre completo" />
+                <Input
+                  value={form.full_name}
+                  onChange={e => handleNameOrIdChange(e.target.value, undefined)}
+                  placeholder="Nombre completo"
+                />
               </div>
               <div>
                 <Label>Código de Trabajador</Label>
-                <Input value={form.worker_code} onChange={e => setForm({...form, worker_code: e.target.value})} placeholder="Ej: TRB-001" />
+                <Input
+                  value={form.worker_code}
+                  onChange={e => setForm({...form, worker_code: e.target.value})}
+                  placeholder="Auto-generado"
+                  className="bg-slate-50 font-mono text-sm"
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Cédula / ID</Label>
-                <Input value={form.id_number} onChange={e => setForm({...form, id_number: e.target.value})} placeholder="Identificación" />
+                <Input
+                  value={form.id_number}
+                  onChange={e => handleNameOrIdChange(undefined, e.target.value)}
+                  placeholder="Identificación"
+                />
               </div>
               <div>
                 <Label>Teléfono</Label>
