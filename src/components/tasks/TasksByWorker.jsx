@@ -52,14 +52,15 @@ export default function TasksByWorker({ tasks, onEdit, onDelete, onHistory, onAt
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
             {workerTasks.map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onHistory={onHistory}
-                onAttachments={onAttachments}
-              />
+              <div key={task.id} onClick={() => onEdit?.(task)}>
+                <TaskCard
+                  task={task}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onHistory={onHistory}
+                  onAttachments={onAttachments}
+                />
+              </div>
             ))}
           </div>
         </div>
