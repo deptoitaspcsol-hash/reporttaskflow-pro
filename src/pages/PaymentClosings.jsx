@@ -108,9 +108,11 @@ export default function PaymentClosings() {
         title="Cierres de Pago"
         subtitle={`${closings.length} cierres realizados`}
         actions={
-          <Button onClick={() => { setShowCreate(true); setPreview(null); setClosingForm({ worker_id: "", period_start: "", period_end: format(new Date(), "yyyy-MM-dd"), notes: "" }); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-            <Plus className="w-4 h-4" /> Nuevo Cierre
-          </Button>
+          {canWrite && (
+            <Button onClick={() => { setShowCreate(true); setPreview(null); setClosingForm({ worker_id: "", period_start: "", period_end: format(new Date(), "yyyy-MM-dd"), notes: "" }); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+              <Plus className="w-4 h-4" /> Nuevo Cierre
+            </Button>
+          )}
         }
       />
 
@@ -138,7 +140,7 @@ export default function PaymentClosings() {
                 <Button variant="ghost" size="sm" onClick={() => setShowDetail(c)} className="text-slate-500 gap-1">
                   <Eye className="w-3.5 h-3.5" /> Ver Detalle
                 </Button>
-                {c.status !== "pagado" && (
+                {c.status !== "pagado" && canWrite && (
                   <Button variant="ghost" size="sm" onClick={() => markPaidMutation.mutate({ id: c.id })} className="text-emerald-600 gap-1">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Marcar Pagado
                   </Button>
