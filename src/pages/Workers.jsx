@@ -133,6 +133,8 @@ export default function Workers() {
     if (!form.phone.trim()) newErrors.phone = "Requerido";
     if (!form.hire_date) newErrors.hire_date = "Requerido";
     if (form.base_salary === "" || form.base_salary === null) newErrors.base_salary = "Requerido";
+    if (!form.group.trim()) newErrors.group = "Requerido";
+    if (!form.photo_url) newErrors.photo_url = "La foto es obligatoria";
     if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
     setErrors({});
     const data = { ...form, base_salary: form.base_salary !== "" ? Number(form.base_salary) : undefined };
