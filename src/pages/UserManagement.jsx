@@ -114,7 +114,7 @@ export default function UserManagement() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {users.map(u => (
-          <Card key={u.id} className="p-5 border-slate-200/80 shadow-sm">
+          <Card key={u.id} className={`p-5 shadow-sm ${u.blocked ? "border-red-200 bg-red-50/30" : "border-slate-200/80"}`}>
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-semibold text-sm">
