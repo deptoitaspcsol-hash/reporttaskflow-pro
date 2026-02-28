@@ -14,6 +14,7 @@ import HistoryLog from "../components/shared/HistoryLog";
 import { saveHistorialChanges, saveHistorialCreated } from "../components/shared/useHistorial";
 import AttachmentsSection from "../components/shared/AttachmentsSection";
 import TaskCalendarView from "../components/tasks/TaskCalendarView";
+import { useTaskNotifications } from "../components/notifications/useTaskNotifications";
 
 const STATUSES = [
   { value: "all", label: "Todos los estados" },

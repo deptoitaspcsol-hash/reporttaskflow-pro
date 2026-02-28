@@ -17,6 +17,7 @@ import {
   Home
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
 
 const navItems = [
   { name: "Inicio", page: "Dashboard", icon: Home },
