@@ -57,14 +57,20 @@ export default function UserManagement() {
       }, 1500);
       toast.success(`Invitación enviada a ${inviteEmail}`);
     } else {
-      // No email: create a placeholder user record directly
-      await base44.entities.User.create({
-        email: inviteEmail.trim(),
-        role: inviteRole,
-        ...(inviteJobTitle.trim() ? { job_title: inviteJobTitle.trim() } : {})
-      });
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      toast.success(`Usuario registrado: ${inviteEmail}`);
+      // sendEmail is off but inviteUser is the only way to register a user — send without notification
+      await base44.users.inviteUser(inviteEmail.trim(), inviteRole === "admin" ? "admin" : "user");
+      setTimeout(async () => {
+        const allUsers = await base44.entities.User.list();
+        const newUser = allUsers.find(u => u.email === inviteEmail.trim());
+        if (newUser) {
+          await base44.entities.User.update(newUser.id, {
+            role: inviteRole,
+            ...(inviteJobTitle.trim() ? { job_title: inviteJobTitle.trim() } : {})
+          });
+        }
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+      }, 1500);
+      toast.success(`Usuario agregado: ${inviteEmail}`);
     }
     setInviteEmail("");
     setInviteRole("visor");

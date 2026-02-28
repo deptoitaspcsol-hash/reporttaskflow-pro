@@ -53,10 +53,10 @@ import PaymentClosings from './pages/PaymentClosings';
 import PaymentHistory from './pages/PaymentHistory';
 import Reports from './pages/Reports';
 import Tasks from './pages/Tasks';
+import UserManagement from './pages/UserManagement';
 import WorkTypes from './pages/WorkTypes';
 import WorkerGroups from './pages/WorkerGroups';
 import Workers from './pages/Workers';
-import UserManagement from './pages/UserManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -67,10 +67,10 @@ export const PAGES = {
     "PaymentHistory": PaymentHistory,
     "Reports": Reports,
     "Tasks": Tasks,
+    "UserManagement": UserManagement,
     "WorkTypes": WorkTypes,
     "WorkerGroups": WorkerGroups,
     "Workers": Workers,
-    "UserManagement": UserManagement,
 }
 
 export const pagesConfig = {
