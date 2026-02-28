@@ -204,6 +204,9 @@ export default function DailyReports() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" onClick={() => setDetailReport(r)} className="text-slate-400 hover:text-emerald-600 h-8 w-8" title="Ver detalle y archivos">
+                            <Eye className="w-3.5 h-3.5" />
+                          </Button>
                           <Button variant="ghost" size="icon" onClick={() => setHistoryReport(r)} className="text-slate-400 hover:text-slate-600 h-8 w-8" title="Ver historial">
                             <History className="w-3.5 h-3.5" />
                           </Button>
