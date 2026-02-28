@@ -43,7 +43,17 @@ export default function Workers() {
 
   const handleEdit = (w) => {
     setEditing(w);
-    setForm({ full_name: w.full_name, id_number: w.id_number || "", phone: w.phone || "", group: w.group || "", status: w.status || "activo" });
+    setForm({
+      full_name: w.full_name,
+      worker_code: w.worker_code || "",
+      id_number: w.id_number || "",
+      phone: w.phone || "",
+      group: w.group || "",
+      work_area: w.work_area || "",
+      hire_date: w.hire_date || "",
+      base_salary: w.base_salary ?? "",
+      status: w.status || "activo"
+    });
     setShowForm(true);
   };
 
