@@ -132,21 +132,35 @@ export default function UserManagement() {
               </div>
               <RoleBadge role={u.role || "visor"} />
             </div>
-            <div className="pt-3 border-t border-slate-100">
-              <Label className="text-xs text-slate-500 mb-1 block">Cambiar rol</Label>
-              <Select
-                value={u.role || "visor"}
-                onValueChange={(val) => updateRoleMutation.mutate({ id: u.id, role: val })}
+            <div className="pt-3 border-t border-slate-100 space-y-3">
+              <div>
+                <Label className="text-xs text-slate-500 mb-1 block">Cambiar rol</Label>
+                <Select
+                  value={u.role || "visor"}
+                  onValueChange={(val) => updateRoleMutation.mutate({ id: u.id, role: val })}
+                >
+                  <SelectTrigger className="h-8 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="capturista">Capturista</SelectItem>
+                    <SelectItem value="visor">Visor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className={`w-full gap-2 text-xs ${u.blocked ? "border-emerald-300 text-emerald-700 hover:bg-emerald-50" : "border-red-200 text-red-600 hover:bg-red-50"}`}
+                onClick={() => toggleBlockMutation.mutate({ id: u.id, blocked: !u.blocked })}
               >
-                <SelectTrigger className="h-8 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="capturista">Capturista</SelectItem>
-                  <SelectItem value="visor">Visor</SelectItem>
-                </SelectContent>
-              </Select>
+                {u.blocked ? (
+                  <><CheckCircle className="w-3.5 h-3.5" /> Desbloquear usuario</>
+                ) : (
+                  <><Ban className="w-3.5 h-3.5" /> Bloquear usuario</>
+                )}
+              </Button>
             </div>
           </Card>
         ))}
