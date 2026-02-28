@@ -27,6 +27,11 @@ export default function Workers() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultWorker);
   const [search, setSearch] = useState("");
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const videoRef = React.useRef(null);
+  const streamRef = React.useRef(null);
+  const photoInputRef = React.useRef(null);
   const queryClient = useQueryClient();
 
   const { data: workers = [], isLoading } = useQuery({
