@@ -33,6 +33,7 @@ const navItems = [
   { name: "Historial de Pagos", page: "PaymentHistory", icon: History },
   { name: "Reportes", page: "Reports", icon: BarChart3 },
   { name: "Usuarios", page: "UserManagement", icon: ShieldCheck },
+  { name: "Roles y Permisos", page: "RoleManagement", icon: Shield },
 ];
 
 export default function Layout({ children, currentPageName }) {
