@@ -64,6 +64,13 @@ export default function DailyReports() {
     mutationFn: (id) => base44.entities.DailyReport.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reports"] }),
   });
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.DailyReport.update(id, data),
+    onSuccess: (updated) => {
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
+      setDetailReport(updated);
+    },
+  });
 
   const resetForm = () => setForm({ date: format(new Date(), "yyyy-MM-dd"), worker_id: "", work_type_id: "", location: "", quantity: "", notes: "" });
 
