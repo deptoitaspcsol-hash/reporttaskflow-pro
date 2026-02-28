@@ -19,6 +19,8 @@ export default function UserManagement() {
   const [showInvite, setShowInvite] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("visor");
+  const [inviteJobTitle, setInviteJobTitle] = useState("");
+  const [sendEmail, setSendEmail] = useState(true);
   const [inviting, setInviting] = useState(false);
   const queryClient = useQueryClient();
 
