@@ -219,6 +219,21 @@ export default function DailyReports() {
         </Card>
       </div>
 
+      {/* History Dialog */}
+      <Dialog open={!!historyReport} onOpenChange={open => { if (!open) setHistoryReport(null); }}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <History className="w-4 h-4 text-slate-500" />
+              Historial — {historyReport?.worker_name} ({historyReport?.date})
+            </DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-y-auto py-2">
+            {historyReport && <HistoryLog entityType="DailyReport" entityId={historyReport.id} />}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Create dialog */}
       <Dialog open={showForm} onOpenChange={(open) => { if (!open) setShowForm(false); }}>
         <DialogContent className="sm:max-w-lg">
