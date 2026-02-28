@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, User, Users, Paperclip, Pencil, Trash2 } from "lucide-react";
+import { Calendar, MapPin, User, Users, Paperclip, Pencil, Trash2, History } from "lucide-react";
 
 const STATUS_CONFIG = {
   pendiente:   { label: "Pendiente",   className: "bg-amber-100 text-amber-700 border-amber-200" },
