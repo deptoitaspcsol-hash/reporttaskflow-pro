@@ -158,9 +158,12 @@ export default function Workers() {
         subtitle={`${workers.filter(w => w.status !== "inactivo").length} activos`}
         actions={
           canWrite ? (
-            <Button onClick={() => { setForm(defaultWorker); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
-              <Plus className="w-4 h-4" /> Nuevo Trabajador
-            </Button>
+            <div className="flex gap-2">
+              <BulkUploadWorkers onDone={() => queryClient.invalidateQueries({ queryKey: ["workers"] })} />
+              <Button onClick={() => { setForm(defaultWorker); setEditing(null); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+                <Plus className="w-4 h-4" /> Nuevo Trabajador
+              </Button>
+            </div>
           ) : null
         }
       />
