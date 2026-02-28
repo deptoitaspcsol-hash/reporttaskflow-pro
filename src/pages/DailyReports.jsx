@@ -149,6 +149,9 @@ export default function DailyReports() {
         subtitle={`${filtered.length} registros · $${totalFiltered.toLocaleString()}`}
         actions={
           <div className="flex gap-2">
+            <Button variant="outline" onClick={exportCSV} className="gap-2 text-slate-600">
+              <Download className="w-4 h-4" /> Exportar CSV
+            </Button>
             <PrintButton contentRef={printRef} />
             {canWrite ? (
               <Button onClick={() => { resetForm(); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
