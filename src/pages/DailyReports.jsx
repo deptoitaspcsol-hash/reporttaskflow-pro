@@ -22,6 +22,7 @@ import AttachmentsSection from "../components/shared/AttachmentsSection";
 export default function DailyReports() {
   const [showForm, setShowForm] = useState(false);
   const [historyReport, setHistoryReport] = useState(null);
+  const [detailReport, setDetailReport] = useState(null);
   const [filterDate, setFilterDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [filterGroup, setFilterGroup] = useState("all");
   const [filterLocation, setFilterLocation] = useState("all");
