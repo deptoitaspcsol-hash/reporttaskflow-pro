@@ -162,6 +162,7 @@ export default function Tasks() {
                     onEdit={handleEdit}
                     onDelete={deleteMutation.mutate}
                     onHistory={() => setHistoryTask(task)}
+                    onAttachments={() => setAttachmentsTask(task)}
                   />
                 ))}
               </div>
