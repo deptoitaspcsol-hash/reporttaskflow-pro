@@ -257,9 +257,11 @@ export default function Workers() {
                 <Label>Nombre Completo *</Label>
                 <Input
                   value={form.full_name}
-                  onChange={e => handleNameOrIdChange(e.target.value, undefined)}
+                  onChange={e => { handleNameOrIdChange(e.target.value, undefined); setErrors(er => ({...er, full_name: ""})); }}
                   placeholder="Nombre completo"
+                  className={errors.full_name ? "border-red-400" : ""}
                 />
+                {errors.full_name && <p className="text-xs text-red-500 mt-0.5">{errors.full_name}</p>}
               </div>
               <div>
                 <Label>Código de Trabajador</Label>
