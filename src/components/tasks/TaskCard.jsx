@@ -17,7 +17,7 @@ const PRIORITY_CONFIG = {
   alta:  { label: "Alta",  className: "bg-red-100 text-red-700" },
 };
 
-export default function TaskCard({ task, onEdit, onDelete }) {
+export default function TaskCard({ task, onEdit, onDelete, onHistory }) {
   const status = STATUS_CONFIG[task.status] || STATUS_CONFIG.pendiente;
   const priority = PRIORITY_CONFIG[task.priority] || PRIORITY_CONFIG.media;
 
