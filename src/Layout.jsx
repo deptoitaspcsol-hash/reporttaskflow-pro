@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
@@ -7,7 +7,6 @@ import {
   UsersRound,
   Briefcase,
   BarChart3,
-  FileText,
   CreditCard,
   History,
   ListTodo,
@@ -15,10 +14,13 @@ import {
   X,
   ChevronRight,
   Home,
-  ShieldCheck
+  ShieldCheck,
+  LogOut,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
+import { base44 } from "@/api/base44Client";
 
 const navItems = [
   { name: "Inicio", page: "Dashboard", icon: Home },
