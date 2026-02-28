@@ -80,6 +80,9 @@ export default function DailyReports() {
     if (!worker || !wt || !form.quantity) return;
     const qty = Number(form.quantity);
     const amount = qty * wt.rate;
+    const progress = form.progress !== "" ? Math.min(100, Math.max(0, Number(form.progress))) : null;
+    const baseSalary = worker.base_salary || 0;
+    const salaryPayment = (progress !== null && baseSalary) ? (progress / 100) * baseSalary : null;
     createMutation.mutate({
       ...form,
       worker_name: worker.full_name,
@@ -89,6 +92,9 @@ export default function DailyReports() {
       unit: wt.unit,
       rate: wt.rate,
       amount,
+      progress: progress !== null ? progress : undefined,
+      base_salary: baseSalary || undefined,
+      salary_payment: salaryPayment !== null ? salaryPayment : undefined,
       status: "abierto",
     });
   };
