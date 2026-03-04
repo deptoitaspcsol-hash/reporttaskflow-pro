@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Search, ListTodo, History, Paperclip, CalendarDays, LayoutList } from "lucide-react";
+import { Plus, Search, ListTodo, History, Paperclip, CalendarDays, LayoutList, FolderOpen } from "lucide-react";
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 import TaskCard from "../components/tasks/TaskCard";
@@ -43,6 +43,7 @@ export default function Tasks() {
   const [editingTask, setEditingTask] = useState(null);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [filterProject, setFilterProject] = useState("all");
   const [historyTask, setHistoryTask] = useState(null);
   const [attachmentsTask, setAttachmentsTask] = useState(null);
   const [viewMode, setViewMode] = useState("list"); // "list" | "calendar"
@@ -51,6 +52,11 @@ export default function Tasks() {
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ["tasks"],
     queryFn: () => base44.entities.Task.list("-created_date", 200),
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ["projects"],
+    queryFn: () => base44.entities.Project.list(),
   });
 
   const { checkStatusChange } = useTaskNotifications(tasks);
@@ -104,7 +110,8 @@ export default function Tasks() {
       t.group_name?.toLowerCase().includes(search.toLowerCase()) ||
       t.location?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = filterStatus === "all" || t.status === filterStatus;
-    return matchSearch && matchStatus;
+    const matchProject = filterProject === "all" || t.project_id === filterProject;
+    return matchSearch && matchStatus && matchProject;
   });
 
   const columns = ["pendiente", "en_progreso", "completada", "cancelada"];
@@ -177,6 +184,22 @@ export default function Tasks() {
             {STATUSES.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
           </SelectContent>
         </Select>
+        <Select value={filterProject} onValueChange={setFilterProject}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Todos los proyectos" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos los proyectos</SelectItem>
+            {projects.map(p => (
+              <SelectItem key={p.id} value={p.id}>
+                <span className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: p.color || "#6366f1" }} />
+                  {p.name}
+                </span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {isLoading ? (
@@ -188,8 +211,8 @@ export default function Tasks() {
           tasks={filtered}
           onEdit={canWrite ? handleEdit : null}
           onDelete={canDelete ? deleteMutation.mutate : null}
-          onHistory={() => {}}
-          onAttachments={() => {}}
+          onHistory={(task) => setHistoryTask(task)}
+          onAttachments={(task) => setAttachmentsTask(task)}
         />
       ) : filtered.length === 0 ? (
         <EmptyState icon={ListTodo} title="No hay tareas" description="Crea la primera tarea para comenzar." />
