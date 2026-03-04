@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Users, Plus, Pencil, Trash2, Phone, IdCard, Search, Camera, Upload, X } from "lucide-react";
+import { Users, Plus, Pencil, Trash2, Phone, IdCard, Search, Camera, Upload, X, DollarSign } from "lucide-react";
 import { useRole } from "../components/shared/useRole";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 import BulkUploadWorkers from "../components/workers/BulkUploadWorkers";
 
-const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", status: "activo", photo_url: "" };
+const defaultWorker = { full_name: "", worker_code: "", id_number: "", phone: "", group: "", work_area: "", hire_date: "", base_salary: "", salary_scale_id: "", salary_scale_name: "", status: "activo", photo_url: "" };
 
 const generateWorkerCode = (fullName, idNumber) => {
   const nameParts = (fullName || "").trim().split(/\s+/).filter(Boolean);
@@ -41,6 +41,11 @@ export default function Workers() {
   const { data: workers = [], isLoading } = useQuery({
     queryKey: ["workers"],
     queryFn: () => base44.entities.Worker.list("-created_date"),
+  });
+
+  const { data: salaryScales = [] } = useQuery({
+    queryKey: ["salaryScales"],
+    queryFn: () => base44.entities.SalaryScale.list(),
   });
 
   const createMutation = useMutation({
@@ -116,6 +121,8 @@ export default function Workers() {
       work_area: w.work_area || "",
       hire_date: w.hire_date || "",
       base_salary: w.base_salary ?? "",
+      salary_scale_id: w.salary_scale_id || "",
+      salary_scale_name: w.salary_scale_name || "",
       status: w.status || "activo",
       photo_url: w.photo_url || ""
     });
@@ -317,7 +324,36 @@ export default function Workers() {
               </div>
               <div>
                 <Label>Salario Base *</Label>
-                <Input type="number" value={form.base_salary} onChange={e => { setForm({...form, base_salary: e.target.value}); setErrors(er => ({...er, base_salary: ""})); }} placeholder="0.00" className={errors.base_salary ? "border-red-400" : ""} />
+                <div className="space-y-1.5">
+                  {salaryScales.filter(s => s.status === "activo").length > 0 && (
+                    <Select
+                      value={form.salary_scale_id || "__manual__"}
+                      onValueChange={v => {
+                        if (v === "__manual__") {
+                          setForm(f => ({ ...f, salary_scale_id: "", salary_scale_name: "" }));
+                        } else {
+                          const scale = salaryScales.find(s => s.id === v);
+                          setForm(f => ({ ...f, salary_scale_id: v, salary_scale_name: scale?.name || "", base_salary: scale?.amount ?? f.base_salary }));
+                          setErrors(er => ({ ...er, base_salary: "" }));
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="text-xs h-8">
+                        <DollarSign className="w-3.5 h-3.5 text-slate-400 mr-1" />
+                        <SelectValue placeholder="Elegir escala..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__manual__">Ingresar manualmente</SelectItem>
+                        {salaryScales.filter(s => s.status === "activo").map(s => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name} — ${Number(s.amount).toLocaleString()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  <Input type="number" value={form.base_salary} onChange={e => { setForm({...form, base_salary: e.target.value, salary_scale_id: "", salary_scale_name: ""}); setErrors(er => ({...er, base_salary: ""})); }} placeholder="0.00" className={errors.base_salary ? "border-red-400" : ""} />
+                </div>
                 {errors.base_salary && <p className="text-xs text-red-500 mt-0.5">{errors.base_salary}</p>}
               </div>
             </div>
