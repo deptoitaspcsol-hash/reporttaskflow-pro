@@ -18,7 +18,8 @@ import {
   Shield,
   LogOut,
   Loader2,
-  FolderOpen
+  FolderOpen,
+  DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
@@ -30,6 +31,7 @@ const navItems = [
   { name: "Tareas", page: "Tasks", icon: ListTodo },
   { name: "Proyectos", page: "Projects", icon: FolderOpen },
   { name: "Trabajadores", page: "Workers", icon: Users },
+  { name: "Salarios", page: "Salaries", icon: DollarSign },
   { name: "Grupos", page: "WorkerGroups", icon: UsersRound },
   { name: "Labores", page: "WorkTypes", icon: Briefcase },
   { name: "Cierres de Pago", page: "PaymentClosings", icon: CreditCard },
