@@ -59,6 +59,7 @@ import WorkTypes from './pages/WorkTypes';
 import WorkerGroups from './pages/WorkerGroups';
 import Workers from './pages/Workers';
 import Projects from './pages/Projects';
+import Salaries from './pages/Salaries';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "WorkerGroups": WorkerGroups,
     "Workers": Workers,
     "Projects": Projects,
+    "Salaries": Salaries,
 }
 
 export const pagesConfig = {
