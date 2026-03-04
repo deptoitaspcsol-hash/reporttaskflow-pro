@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, User, Users, Paperclip, Pencil, Trash2, History, CheckCircle2 } from "lucide-react";
+import { Calendar, MapPin, User, Users, Paperclip, Pencil, Trash2, History, CheckCircle2, FolderOpen, ListTodo } from "lucide-react";
 import TaskDueDate from "./TaskDueDate";
 import TaskPriorityBadge from "./TaskPriorityBadge";
 
@@ -58,6 +58,12 @@ export default function TaskCard({ task, onEdit, onDelete, onHistory, onAttachme
           </div>
         </div>
 
+        {task.project_name && (
+          <div className="flex items-center gap-1 text-xs mb-2" style={{ color: task.project_color || "#6366f1" }}>
+            <FolderOpen className="w-3 h-3" />
+            <span className="font-medium truncate">{task.project_name}</span>
+          </div>
+        )}
         <div className="flex flex-wrap gap-1.5 mb-3">
           <Badge className={`text-xs border ${status.className}`}>{status.label}</Badge>
           <TaskPriorityBadge priority={task.priority} />
@@ -90,6 +96,25 @@ export default function TaskCard({ task, onEdit, onDelete, onHistory, onAttachme
             </div>
           )}
         </div>
+
+        {/* Subtasks progress */}
+        {(task.subtasks || []).length > 0 && (() => {
+          const done = task.subtasks.filter(s => s.completed).length;
+          const total = task.subtasks.length;
+          const pct = Math.round((done / total) * 100);
+          return (
+            <div className="mt-2 border-t border-slate-100 pt-2">
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-1">
+                <ListTodo className="w-3.5 h-3.5" />
+                <span>{done}/{total} subtareas</span>
+                <span className="ml-auto font-medium text-emerald-600">{pct}%</span>
+              </div>
+              <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pct}%` }} />
+              </div>
+            </div>
+          );
+        })()}
 
         {task.estimated_cost > 0 && (
           <div className="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center">
