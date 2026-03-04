@@ -7,7 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Paperclip, X, Upload, Loader2, Check } from "lucide-react";
+import { Paperclip, X, Upload, Loader2, Check, FolderOpen } from "lucide-react";
+import SubtaskList from "./SubtaskList";
 
 const STATUSES = [
   { value: "pendiente", label: "Pendiente" },
@@ -27,8 +28,10 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
     title: "", description: "", location: "", assigned_to: "worker",
     worker_ids: [], worker_names: [], worker_id: "", worker_name: "",
     group_name: "", work_type_id: "", work_type_name: "",
+    project_id: "", project_name: "", project_color: "",
     start_date: "", end_date: "", estimated_cost: "",
     status: "pendiente", priority: "media", attachments: [], notes: "",
+    subtasks: [],
   });
   const [uploading, setUploading] = useState(false);
   const [workerSearch, setWorkerSearch] = useState("");
@@ -44,6 +47,10 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
   const { data: groups = [] } = useQuery({
     queryKey: ["workerGroups"],
     queryFn: () => base44.entities.WorkerGroup.list(),
+  });
+  const { data: projects = [] } = useQuery({
+    queryKey: ["projects"],
+    queryFn: () => base44.entities.Project.list(),
   });
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -72,6 +79,15 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
     const wt = workTypes.find(w => w.id === id);
     set("work_type_id", id);
     set("work_type_name", wt?.name || "");
+  };
+
+  const handleProject = (id) => {
+    if (id === "__none__") {
+      setForm(f => ({ ...f, project_id: "", project_name: "", project_color: "" }));
+      return;
+    }
+    const p = projects.find(p => p.id === id);
+    setForm(f => ({ ...f, project_id: id, project_name: p?.name || "", project_color: p?.color || "" }));
   };
 
   const handleFileUpload = async (e) => {
@@ -115,6 +131,27 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
         <div className="space-y-1">
           <Label>Título *</Label>
           <Input value={form.title} onChange={e => set("title", e.target.value)} placeholder="Nombre de la tarea" required />
+        </div>
+
+        {/* Project */}
+        <div className="space-y-1">
+          <Label className="flex items-center gap-1.5"><FolderOpen className="w-3.5 h-3.5 text-slate-400" /> Proyecto</Label>
+          <Select value={form.project_id || "__none__"} onValueChange={handleProject}>
+            <SelectTrigger>
+              <SelectValue placeholder="Sin proyecto" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__none__">Sin proyecto</SelectItem>
+              {projects.filter(p => p.status !== "inactivo").map(p => (
+                <SelectItem key={p.id} value={p.id}>
+                  <span className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ backgroundColor: p.color || "#6366f1" }} />
+                    {p.name}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Description */}
@@ -243,6 +280,12 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        {/* Subtasks */}
+        <div className="space-y-1.5">
+          <Label>Subtareas</Label>
+          <SubtaskList subtasks={form.subtasks || []} onChange={v => set("subtasks", v)} />
         </div>
 
         {/* Notes */}
