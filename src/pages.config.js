@@ -58,6 +58,7 @@ import UserManagement from './pages/UserManagement';
 import WorkTypes from './pages/WorkTypes';
 import WorkerGroups from './pages/WorkerGroups';
 import Workers from './pages/Workers';
+import Projects from './pages/Projects';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "WorkTypes": WorkTypes,
     "WorkerGroups": WorkerGroups,
     "Workers": Workers,
+    "Projects": Projects,
 }
 
 export const pagesConfig = {
