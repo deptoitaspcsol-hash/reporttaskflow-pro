@@ -19,7 +19,8 @@ import {
   LogOut,
   Loader2,
   FolderOpen,
-  DollarSign
+  DollarSign,
+  CalendarDays
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
