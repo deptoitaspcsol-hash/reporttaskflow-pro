@@ -40,7 +40,7 @@ function validateRow(row, allRows, index) {
   return errors;
 }
 
-export default function BulkUploadWorkTypes({ onDone }) {
+export default function BulkUploadWorkTypes({ onDone, existingWorkTypes = [] }) {
   const [open, setOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const [validationResults, setValidationResults] = useState([]);
