@@ -12,14 +12,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 import BulkUploadWorkTypes from "../components/workTypes/BulkUploadWorkTypes";
+import CreatableSelect from "../components/workTypes/CreatableSelect";
 
 const defaultWork = { code: "", name: "", description: "", unit: "", rate: 0, category: "", labor_type: "", cost_center: "", cost_center_2: "" };
+
+const DEFAULT_LABOR_TYPES = ["Destajo", "Jornal", "Servicio", "Contrato"];
+const DEFAULT_COST_CENTERS = ["1", "2", "3"];
 
 export default function WorkTypes() {
   const { canWrite, canDelete } = useRole();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultWork);
+  const [laborTypeOptions, setLaborTypeOptions] = useState(DEFAULT_LABOR_TYPES);
+  const [costCenter1Options, setCostCenter1Options] = useState(DEFAULT_COST_CENTERS);
+  const [costCenter2Options, setCostCenter2Options] = useState(DEFAULT_COST_CENTERS);
   const queryClient = useQueryClient();
 
   const { data: workTypes = [], isLoading } = useQuery({
