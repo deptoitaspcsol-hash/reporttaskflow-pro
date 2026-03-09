@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { format } from "date-fns";
-import { ClipboardList, Plus, Trash2, MapPin, History, Paperclip, Eye, Download } from "lucide-react";
+import { ClipboardList, Plus, Trash2, MapPin, History, Paperclip, Eye, Download, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,12 +13,14 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 import PrintButton from "../components/shared/PrintButton";
 import HistoryLog from "../components/shared/HistoryLog";
 import { saveHistorialCreated } from "../components/shared/useHistorial";
 import AttachmentsSection from "../components/shared/AttachmentsSection";
+import ReportsMap from "../components/reports/ReportsMap";
 
 export default function DailyReports() {
   const { canWrite, canDelete } = useRole();
