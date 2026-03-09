@@ -59,7 +59,7 @@ export default function BulkUploadWorkTypes({ onDone }) {
       const results = parsed.map((row, i) => ({
         row,
         index: i + 2,
-        errors: validateRow(row, i),
+        errors: validateRow(row, parsed, i),
       }));
       setRows(parsed);
       setValidationResults(results);
