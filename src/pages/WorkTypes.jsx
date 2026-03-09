@@ -44,7 +44,7 @@ export default function WorkTypes() {
 
   const handleEdit = (wt) => {
     setEditing(wt);
-    setForm({ name: wt.name, description: wt.description || "", unit: wt.unit, rate: wt.rate, category: wt.category || "", cost_center: wt.cost_center || "" });
+    setForm({ code: wt.code || "", name: wt.name, description: wt.description || "", unit: wt.unit, rate: wt.rate, category: wt.category || "", cost_center: wt.cost_center || "" });
     setShowForm(true);
   };
 
