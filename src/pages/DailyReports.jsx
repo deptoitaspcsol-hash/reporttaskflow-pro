@@ -197,82 +197,97 @@ export default function DailyReports() {
         </div>
       </Card>
 
-      {/* Table */}
-      <div ref={printRef}>
-        <div className="print-header mb-4 hidden">
-          <h2 className="text-lg font-bold">Reporte Diario de Labores</h2>
-          <p className="text-sm text-slate-500">Fecha: {filterDate || "Todas"} | Grupo: {filterGroup === "all" ? "Todos" : filterGroup}</p>
-        </div>
-        <Card className="border-slate-200/80 shadow-sm overflow-hidden">
-          {filtered.length === 0 ? (
-            <EmptyState icon={ClipboardList} title="Sin reportes" description="No hay registros para los filtros seleccionados" />
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-slate-50/50">
-                    <TableHead className="text-xs">Trabajador</TableHead>
-                    <TableHead className="text-xs">Labor</TableHead>
-                    <TableHead className="text-xs">Ubicación</TableHead>
-                    <TableHead className="text-xs text-right">Cantidad</TableHead>
-                    <TableHead className="text-xs text-right">Tarifa</TableHead>
-                    <TableHead className="text-xs text-right">Monto</TableHead>
-                    <TableHead className="text-xs">Estado</TableHead>
-                    <TableHead className="text-xs w-12"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.map(r => (
-                    <TableRow key={r.id} className="hover:bg-slate-50/50">
-                      <TableCell>
-                        <div>
-                          <p className="text-sm font-medium text-slate-800">{r.worker_name}</p>
-                          <p className="text-xs text-slate-400">{r.group}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm">{r.work_type_name}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-slate-600">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          {r.location || "—"}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right text-sm">{r.quantity} {r.unit}</TableCell>
-                      <TableCell className="text-right text-sm text-slate-500">${r.rate?.toLocaleString()}</TableCell>
-                      <TableCell className="text-right text-sm font-semibold text-slate-800">${(r.amount || 0).toLocaleString()}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className={r.status === "cerrado" ? "bg-violet-50 text-violet-700" : "bg-amber-50 text-amber-700"}>
-                          {r.status || "abierto"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="icon" onClick={() => setDetailReport(r)} className="text-slate-400 hover:text-emerald-600 h-8 w-8" title="Ver detalle y archivos">
-                            <Eye className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button variant="ghost" size="icon" onClick={() => setHistoryReport(r)} className="text-slate-400 hover:text-slate-600 h-8 w-8" title="Ver historial">
-                            <History className="w-3.5 h-3.5" />
-                          </Button>
-                          {r.status !== "cerrado" && canDelete && (
-                            <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(r.id)} className="text-red-400 hover:text-red-600 h-8 w-8">
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  <TableRow className="bg-slate-50 font-semibold">
-                    <TableCell colSpan={5} className="text-right text-sm">Total</TableCell>
-                    <TableCell className="text-right text-sm">${totalFiltered.toLocaleString()}</TableCell>
-                    <TableCell colSpan={2}></TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+      {/* Tabs: Tabla / Mapa */}
+      <Tabs defaultValue="table">
+        <TabsList className="mb-4">
+          <TabsTrigger value="table" className="gap-2"><ClipboardList className="w-4 h-4" /> Tabla</TabsTrigger>
+          <TabsTrigger value="map" className="gap-2"><Map className="w-4 h-4" /> Mapa de Productividad</TabsTrigger>
+        </TabsList>
+
+        {/* TABLE TAB */}
+        <TabsContent value="table">
+          <div ref={printRef}>
+            <div className="print-header mb-4 hidden">
+              <h2 className="text-lg font-bold">Reporte Diario de Labores</h2>
+              <p className="text-sm text-slate-500">Fecha: {filterDate || "Todas"} | Grupo: {filterGroup === "all" ? "Todos" : filterGroup}</p>
             </div>
-          )}
-        </Card>
-      </div>
+            <Card className="border-slate-200/80 shadow-sm overflow-hidden">
+              {filtered.length === 0 ? (
+                <EmptyState icon={ClipboardList} title="Sin reportes" description="No hay registros para los filtros seleccionados" />
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-slate-50/50">
+                        <TableHead className="text-xs">Trabajador</TableHead>
+                        <TableHead className="text-xs">Labor</TableHead>
+                        <TableHead className="text-xs">Ubicación</TableHead>
+                        <TableHead className="text-xs text-right">Cantidad</TableHead>
+                        <TableHead className="text-xs text-right">Tarifa</TableHead>
+                        <TableHead className="text-xs text-right">Monto</TableHead>
+                        <TableHead className="text-xs">Estado</TableHead>
+                        <TableHead className="text-xs w-12"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filtered.map(r => (
+                        <TableRow key={r.id} className="hover:bg-slate-50/50">
+                          <TableCell>
+                            <div>
+                              <p className="text-sm font-medium text-slate-800">{r.worker_name}</p>
+                              <p className="text-xs text-slate-400">{r.group}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-sm">{r.work_type_name}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 text-sm text-slate-600">
+                              <MapPin className="w-3 h-3 text-slate-400" />
+                              {r.location || "—"}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right text-sm">{r.quantity} {r.unit}</TableCell>
+                          <TableCell className="text-right text-sm text-slate-500">${r.rate?.toLocaleString()}</TableCell>
+                          <TableCell className="text-right text-sm font-semibold text-slate-800">${(r.amount || 0).toLocaleString()}</TableCell>
+                          <TableCell>
+                            <Badge variant="secondary" className={r.status === "cerrado" ? "bg-violet-50 text-violet-700" : "bg-amber-50 text-amber-700"}>
+                              {r.status || "abierto"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-1">
+                              <Button variant="ghost" size="icon" onClick={() => setDetailReport(r)} className="text-slate-400 hover:text-emerald-600 h-8 w-8" title="Ver detalle y archivos">
+                                <Eye className="w-3.5 h-3.5" />
+                              </Button>
+                              <Button variant="ghost" size="icon" onClick={() => setHistoryReport(r)} className="text-slate-400 hover:text-slate-600 h-8 w-8" title="Ver historial">
+                                <History className="w-3.5 h-3.5" />
+                              </Button>
+                              {r.status !== "cerrado" && canDelete && (
+                                <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(r.id)} className="text-red-400 hover:text-red-600 h-8 w-8">
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                      <TableRow className="bg-slate-50 font-semibold">
+                        <TableCell colSpan={5} className="text-right text-sm">Total</TableCell>
+                        <TableCell className="text-right text-sm">${totalFiltered.toLocaleString()}</TableCell>
+                        <TableCell colSpan={2}></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* MAP TAB */}
+        <TabsContent value="map">
+          <ReportsMap reports={filtered} groups={groups} filterGroup={filterGroup} />
+        </TabsContent>
+      </Tabs>
 
       {/* Detail + Attachments Dialog */}
       <Dialog open={!!detailReport} onOpenChange={open => { if (!open) setDetailReport(null); }}>
