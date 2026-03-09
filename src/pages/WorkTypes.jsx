@@ -26,6 +26,7 @@ export default function WorkTypes() {
   const [laborTypeOptions, setLaborTypeOptions] = useState(DEFAULT_LABOR_TYPES);
   const [costCenter1Options, setCostCenter1Options] = useState(DEFAULT_COST_CENTERS);
   const [costCenter2Options, setCostCenter2Options] = useState(DEFAULT_COST_CENTERS);
+  const [formErrors, setFormErrors] = useState({});
   const queryClient = useQueryClient();
 
   const { data: workTypes = [], isLoading } = useQuery({
@@ -46,7 +47,7 @@ export default function WorkTypes() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workTypes"] }),
   });
 
-  const closeForm = () => { setShowForm(false); setEditing(null); setForm(defaultWork); };
+  const closeForm = () => { setShowForm(false); setEditing(null); setForm(defaultWork); setFormErrors({}); };
 
   const handleEdit = (wt) => {
     setEditing(wt);
@@ -55,7 +56,21 @@ export default function WorkTypes() {
   };
 
   const handleSubmit = () => {
-    if (!form.name.trim() || !form.unit.trim()) return;
+    const errors = {};
+    if (!form.name.trim()) errors.name = "El nombre es requerido";
+    if (!form.unit.trim()) errors.unit = "La unidad es requerida";
+
+    const othersWithSameName = workTypes.filter(wt => wt.id !== editing?.id && wt.name.trim().toLowerCase() === form.name.trim().toLowerCase());
+    if (othersWithSameName.length > 0) errors.name = "Ya existe una labor con ese nombre";
+
+    if (form.code.trim()) {
+      const othersWithSameCode = workTypes.filter(wt => wt.id !== editing?.id && wt.code?.trim().toLowerCase() === form.code.trim().toLowerCase());
+      if (othersWithSameCode.length > 0) errors.code = "Ya existe una labor con ese código";
+    }
+
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
     const data = { ...form, rate: Number(form.rate) };
     if (editing) updateMutation.mutate({ id: editing.id, data });
     else createMutation.mutate(data);
