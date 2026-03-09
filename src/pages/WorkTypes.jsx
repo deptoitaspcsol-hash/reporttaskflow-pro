@@ -151,37 +151,35 @@ export default function WorkTypes() {
               </div>
               <div>
                 <Label>Tipo de Labor</Label>
-                <Input value={form.labor_type} onChange={e => setForm({...form, labor_type: e.target.value})} placeholder="Ej: Destajo, Jornal" />
+                <CreatableSelect
+                  value={form.labor_type}
+                  onValueChange={(val) => setForm({...form, labor_type: val})}
+                  options={laborTypeOptions}
+                  setOptions={setLaborTypeOptions}
+                  placeholder="Seleccionar tipo"
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Centro de Costo</Label>
-                <Select value={form.cost_center} onValueChange={(val) => setForm({...form, cost_center: val})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null}>Ninguno</SelectItem>
-                    <SelectItem value="1">Centro 1</SelectItem>
-                    <SelectItem value="2">Centro 2</SelectItem>
-                    <SelectItem value="3">Centro 3</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>Centro de Costo 1</Label>
+                <CreatableSelect
+                  value={form.cost_center}
+                  onValueChange={(val) => setForm({...form, cost_center: val})}
+                  options={costCenter1Options}
+                  setOptions={setCostCenter1Options}
+                  placeholder="Seleccionar"
+                />
               </div>
               <div>
                 <Label>Centro de Costo 2</Label>
-                <Select value={form.cost_center_2} onValueChange={(val) => setForm({...form, cost_center_2: val})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null}>Ninguno</SelectItem>
-                    <SelectItem value="1">Centro 1</SelectItem>
-                    <SelectItem value="2">Centro 2</SelectItem>
-                    <SelectItem value="3">Centro 3</SelectItem>
-                  </SelectContent>
-                </Select>
+                <CreatableSelect
+                  value={form.cost_center_2}
+                  onValueChange={(val) => setForm({...form, cost_center_2: val})}
+                  options={costCenter2Options}
+                  setOptions={setCostCenter2Options}
+                  placeholder="Seleccionar"
+                />
               </div>
             </div>
           </div>
