@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 
 const EXPECTED_COLUMNS = ["code", "name", "description", "unit", "category", "labor_type", "cost_center", "cost_center_2"];
-const REQUIRED = ["name", "unit", "rate"];
+const REQUIRED = ["name", "unit"];
 
 function parseCSV(text) {
   const lines = text.split(/\r?\n/).filter(l => l.trim());
@@ -29,7 +29,7 @@ function validateRow(row, index) {
       errors.push(`Columna "${field}" requerida`);
     }
   });
-  if (row.rate && isNaN(Number(row.rate))) errors.push("rate debe ser número");
+
   if (row.cost_center && !["1", "2", "3"].includes(String(row.cost_center).trim())) {
     errors.push("cost_center debe ser 1, 2 o 3");
   }
@@ -78,7 +78,7 @@ export default function BulkUploadWorkTypes({ onDone }) {
         code: row.code || "",
         name: row.name,
         unit: row.unit,
-        rate: Number(row.rate),
+
         description: row.description || "",
         category: row.category || "",
         labor_type: row.labor_type || "",
@@ -100,8 +100,8 @@ export default function BulkUploadWorkTypes({ onDone }) {
   };
 
   const downloadTemplate = () => {
-    const header = "code,name,description,unit,rate,category,labor_type,cost_center,cost_center_2";
-    const example = "LAB-001,Limpieza de terreno,Remoción de maleza,metros,50,Limpieza,Destajo,1,2";
+    const header = "code,name,description,unit,category,labor_type,cost_center,cost_center_2";
+    const example = "LAB-001,Limpieza de terreno,Remoción de maleza,metros,Limpieza,Destajo,1,2";
     const csv = `${header}\n${example}`;
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
