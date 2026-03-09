@@ -56,11 +56,19 @@ export default function BulkUploadWorkTypes({ onDone, existingWorkTypes = [] }) 
     const reader = new FileReader();
     reader.onload = (ev) => {
       const { rows: parsed } = parseCSV(ev.target.result);
-      const results = parsed.map((row, i) => ({
-        row,
-        index: i + 2,
-        errors: validateRow(row, parsed, i),
-      }));
+      const results = parsed.map((row, i) => {
+        const errors = validateRow(row, parsed, i);
+        // Validar contra registros existentes en BD
+        if (row.name?.trim()) {
+          const existName = existingWorkTypes.find(wt => wt.name?.trim().toLowerCase() === row.name.trim().toLowerCase());
+          if (existName) errors.push("Nombre ya existe en el sistema");
+        }
+        if (row.code?.trim()) {
+          const existCode = existingWorkTypes.find(wt => wt.code?.trim().toLowerCase() === row.code.trim().toLowerCase());
+          if (existCode) errors.push("Código ya existe en el sistema");
+        }
+        return { row, index: i + 2, errors };
+      });
       setRows(parsed);
       setValidationResults(results);
       setProgress(0);
