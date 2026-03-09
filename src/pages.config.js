@@ -47,10 +47,13 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import Attendance from './pages/Attendance';
 import DailyReports from './pages/DailyReports';
 import Dashboard from './pages/Dashboard';
+import Inventory from './pages/Inventory';
 import PaymentClosings from './pages/PaymentClosings';
 import PaymentHistory from './pages/PaymentHistory';
+import Performance from './pages/Performance';
 import Projects from './pages/Projects';
 import Reports from './pages/Reports';
 import RoleManagement from './pages/RoleManagement';
@@ -60,17 +63,17 @@ import UserManagement from './pages/UserManagement';
 import WorkTypes from './pages/WorkTypes';
 import WorkerGroups from './pages/WorkerGroups';
 import Workers from './pages/Workers';
-import Attendance from './pages/Attendance';
-import Performance from './pages/Performance';
-import Inventory from './pages/Inventory';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "Attendance": Attendance,
     "DailyReports": DailyReports,
     "Dashboard": Dashboard,
+    "Inventory": Inventory,
     "PaymentClosings": PaymentClosings,
     "PaymentHistory": PaymentHistory,
+    "Performance": Performance,
     "Projects": Projects,
     "Reports": Reports,
     "RoleManagement": RoleManagement,
@@ -80,9 +83,6 @@ export const PAGES = {
     "WorkTypes": WorkTypes,
     "WorkerGroups": WorkerGroups,
     "Workers": Workers,
-    "Attendance": Attendance,
-    "Performance": Performance,
-    "Inventory": Inventory,
 }
 
 export const pagesConfig = {
