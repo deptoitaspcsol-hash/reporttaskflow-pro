@@ -62,6 +62,7 @@ import WorkerGroups from './pages/WorkerGroups';
 import Workers from './pages/Workers';
 import Attendance from './pages/Attendance';
 import Performance from './pages/Performance';
+import Inventory from './pages/Inventory';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "Workers": Workers,
     "Attendance": Attendance,
     "Performance": Performance,
+    "Inventory": Inventory,
 }
 
 export const pagesConfig = {

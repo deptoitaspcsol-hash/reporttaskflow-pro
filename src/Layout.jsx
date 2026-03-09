@@ -36,6 +36,7 @@ const navItems = [
   { name: "Salarios", page: "Salaries", icon: DollarSign },
   { name: "Grupos", page: "WorkerGroups", icon: UsersRound },
   { name: "Labores", page: "WorkTypes", icon: Briefcase },
+  { name: "Inventario", page: "Inventory", icon: Package },
   { name: "Cierres de Pago", page: "PaymentClosings", icon: CreditCard },
   { name: "Historial de Pagos", page: "PaymentHistory", icon: History },
   { name: "Reportes", page: "Reports", icon: BarChart3 },
