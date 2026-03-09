@@ -30,9 +30,6 @@ function validateRow(row, index) {
     }
   });
 
-  if (row.cost_center && !["1", "2", "3"].includes(String(row.cost_center).trim())) {
-    errors.push("cost_center debe ser 1, 2 o 3");
-  }
   return errors;
 }
 
