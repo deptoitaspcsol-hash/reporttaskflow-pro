@@ -118,9 +118,15 @@ export default function WorkTypes() {
             <DialogTitle>{editing ? "Editar Labor" : "Nueva Labor"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div>
-              <Label>Nombre de la Labor *</Label>
-              <Input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Ej: Limpieza de terreno" />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Código de Labor</Label>
+                <Input value={form.code} onChange={e => setForm({...form, code: e.target.value})} placeholder="Ej: LAB-001" />
+              </div>
+              <div>
+                <Label>Nombre de la Labor *</Label>
+                <Input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Ej: Limpieza de terreno" />
+              </div>
             </div>
             <div>
               <Label>Descripción</Label>
