@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 
-const EXPECTED_COLUMNS = ["code", "name", "description", "unit", "rate", "category", "labor_type", "cost_center", "cost_center_2"];
+const EXPECTED_COLUMNS = ["code", "name", "description", "unit", "category", "labor_type", "cost_center", "cost_center_2"];
 const REQUIRED = ["name", "unit", "rate"];
 
 function parseCSV(text) {

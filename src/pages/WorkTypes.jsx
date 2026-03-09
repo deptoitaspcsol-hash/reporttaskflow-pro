@@ -133,15 +133,9 @@ export default function WorkTypes() {
               <Label>Descripción</Label>
               <Input value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Descripción breve" />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>Unidad de medida *</Label>
-                <Input value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} placeholder="Ej: metros, horas" />
-              </div>
-              <div>
-                <Label>Tarifa por unidad *</Label>
-                <Input type="number" value={form.rate} onChange={e => setForm({...form, rate: e.target.value})} placeholder="0.00" />
-              </div>
+            <div>
+              <Label>Unidad de medida *</Label>
+              <Input value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} placeholder="Ej: metros, horas" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
