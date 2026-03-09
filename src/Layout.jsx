@@ -20,7 +20,9 @@ import {
   Loader2,
   FolderOpen,
   DollarSign,
-  CalendarDays
+  CalendarDays,
+  Package,
+  TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
