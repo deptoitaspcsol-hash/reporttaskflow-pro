@@ -22,14 +22,21 @@ function parseCSV(text) {
   return { headers, rows };
 }
 
-function validateRow(row, index) {
+function validateRow(row, allRows, index) {
   const errors = [];
   REQUIRED.forEach(field => {
     if (!row[field] || String(row[field]).trim() === "") {
       errors.push(`Columna "${field}" requerida`);
     }
   });
-
+  // Verificar nombre duplicado en el mismo archivo
+  const dupName = allRows.filter((r, i) => i !== index && r.name?.trim().toLowerCase() === row.name?.trim().toLowerCase());
+  if (dupName.length > 0) errors.push("Nombre duplicado en el archivo");
+  // Verificar código duplicado en el mismo archivo (si tiene código)
+  if (row.code?.trim()) {
+    const dupCode = allRows.filter((r, i) => i !== index && r.code?.trim().toLowerCase() === row.code?.trim().toLowerCase());
+    if (dupCode.length > 0) errors.push("Código duplicado en el archivo");
+  }
   return errors;
 }
 

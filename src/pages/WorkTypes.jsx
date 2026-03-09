@@ -143,11 +143,13 @@ export default function WorkTypes() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Código de Labor</Label>
-                <Input value={form.code} onChange={e => setForm({...form, code: e.target.value})} placeholder="Ej: LAB-001" />
+                <Input value={form.code} onChange={e => setForm({...form, code: e.target.value})} placeholder="Ej: LAB-001" className={formErrors.code ? "border-red-400" : ""} />
+                {formErrors.code && <p className="text-xs text-red-500 mt-1">{formErrors.code}</p>}
               </div>
               <div>
                 <Label>Nombre de la Labor *</Label>
-                <Input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Ej: Limpieza de terreno" />
+                <Input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Ej: Limpieza de terreno" className={formErrors.name ? "border-red-400" : ""} />
+                {formErrors.name && <p className="text-xs text-red-500 mt-1">{formErrors.name}</p>}
               </div>
             </div>
             <div>
@@ -156,7 +158,8 @@ export default function WorkTypes() {
             </div>
             <div>
               <Label>Unidad de medida *</Label>
-              <Input value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} placeholder="Ej: metros, horas" />
+              <Input value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} placeholder="Ej: metros, horas" className={formErrors.unit ? "border-red-400" : ""} />
+              {formErrors.unit && <p className="text-xs text-red-500 mt-1">{formErrors.unit}</p>}
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
