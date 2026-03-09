@@ -28,6 +28,7 @@ import { base44 } from "@/api/base44Client";
 const navItems = [
   { name: "Inicio", page: "Dashboard", icon: Home },
   { name: "Reporte Diario", page: "DailyReports", icon: ClipboardList },
+  { name: "Asistencia", page: "Attendance", icon: CalendarDays },
   { name: "Tareas", page: "Tasks", icon: ListTodo },
   { name: "Proyectos", page: "Projects", icon: FolderOpen },
   { name: "Trabajadores", page: "Workers", icon: Users },

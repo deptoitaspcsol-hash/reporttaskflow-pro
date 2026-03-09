@@ -51,15 +51,16 @@ import DailyReports from './pages/DailyReports';
 import Dashboard from './pages/Dashboard';
 import PaymentClosings from './pages/PaymentClosings';
 import PaymentHistory from './pages/PaymentHistory';
+import Projects from './pages/Projects';
 import Reports from './pages/Reports';
 import RoleManagement from './pages/RoleManagement';
+import Salaries from './pages/Salaries';
 import Tasks from './pages/Tasks';
 import UserManagement from './pages/UserManagement';
 import WorkTypes from './pages/WorkTypes';
 import WorkerGroups from './pages/WorkerGroups';
 import Workers from './pages/Workers';
-import Projects from './pages/Projects';
-import Salaries from './pages/Salaries';
+import Attendance from './pages/Attendance';
 import __Layout from './Layout.jsx';
 
 
@@ -68,15 +69,16 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "PaymentClosings": PaymentClosings,
     "PaymentHistory": PaymentHistory,
+    "Projects": Projects,
     "Reports": Reports,
     "RoleManagement": RoleManagement,
+    "Salaries": Salaries,
     "Tasks": Tasks,
     "UserManagement": UserManagement,
     "WorkTypes": WorkTypes,
     "WorkerGroups": WorkerGroups,
     "Workers": Workers,
-    "Projects": Projects,
-    "Salaries": Salaries,
+    "Attendance": Attendance,
 }
 
 export const pagesConfig = {
