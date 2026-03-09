@@ -39,6 +39,7 @@ const navItems = [
   { name: "Cierres de Pago", page: "PaymentClosings", icon: CreditCard },
   { name: "Historial de Pagos", page: "PaymentHistory", icon: History },
   { name: "Reportes", page: "Reports", icon: BarChart3 },
+  { name: "Desempeño", page: "Performance", icon: TrendingUp },
   { name: "Usuarios", page: "UserManagement", icon: ShieldCheck },
   { name: "Roles y Permisos", page: "RoleManagement", icon: Shield },
 ];
