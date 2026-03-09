@@ -44,7 +44,7 @@ export default function WorkTypes() {
 
   const handleEdit = (wt) => {
     setEditing(wt);
-    setForm({ code: wt.code || "", name: wt.name, description: wt.description || "", unit: wt.unit, rate: wt.rate, category: wt.category || "", cost_center: wt.cost_center || "" });
+    setForm({ code: wt.code || "", name: wt.name, description: wt.description || "", unit: wt.unit, rate: wt.rate, category: wt.category || "", labor_type: wt.labor_type || "", cost_center: wt.cost_center || "", cost_center_2: wt.cost_center_2 || "" });
     setShowForm(true);
   };
 
@@ -149,8 +149,28 @@ export default function WorkTypes() {
                 <Input value={form.category} onChange={e => setForm({...form, category: e.target.value})} placeholder="Ej: Construcción" />
               </div>
               <div>
+                <Label>Tipo de Labor</Label>
+                <Input value={form.labor_type} onChange={e => setForm({...form, labor_type: e.target.value})} placeholder="Ej: Destajo, Jornal" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
                 <Label>Centro de Costo</Label>
                 <Select value={form.cost_center} onValueChange={(val) => setForm({...form, cost_center: val})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>Ninguno</SelectItem>
+                    <SelectItem value="1">Centro 1</SelectItem>
+                    <SelectItem value="2">Centro 2</SelectItem>
+                    <SelectItem value="3">Centro 3</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Centro de Costo 2</Label>
+                <Select value={form.cost_center_2} onValueChange={(val) => setForm({...form, cost_center_2: val})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar" />
                   </SelectTrigger>
