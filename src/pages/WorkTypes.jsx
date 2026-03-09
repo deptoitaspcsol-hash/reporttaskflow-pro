@@ -82,6 +82,7 @@ export default function WorkTypes() {
                 <div>
                   <p className="font-semibold text-slate-800">{wt.name}</p>
                   <div className="flex gap-2 flex-wrap mt-0.5">
+                    {wt.code && <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 font-mono">{wt.code}</span>}
                     {wt.category && <span className="text-xs text-slate-400">{wt.category}</span>}
                     {wt.cost_center && <span className="text-xs px-1.5 py-0.5 rounded-full bg-slate-700 text-white">CC {wt.cost_center}</span>}
                   </div>
