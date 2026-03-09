@@ -13,7 +13,7 @@ import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 import BulkUploadWorkTypes from "../components/workTypes/BulkUploadWorkTypes";
 
-const defaultWork = { code: "", name: "", description: "", unit: "", rate: 0, category: "", cost_center: "" };
+const defaultWork = { code: "", name: "", description: "", unit: "", rate: 0, category: "", labor_type: "", cost_center: "", cost_center_2: "" };
 
 export default function WorkTypes() {
   const { canWrite, canDelete } = useRole();
