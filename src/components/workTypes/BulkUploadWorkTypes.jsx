@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 
-const EXPECTED_COLUMNS = ["name", "description", "unit", "rate", "category", "cost_center"];
+const EXPECTED_COLUMNS = ["code", "name", "description", "unit", "rate", "category", "cost_center"];
 const REQUIRED = ["name", "unit", "rate"];
 
 function parseCSV(text) {
@@ -75,6 +75,7 @@ export default function BulkUploadWorkTypes({ onDone }) {
     for (let i = 0; i < valid.length; i++) {
       const { row } = valid[i];
       const workTypeData = {
+        code: row.code || "",
         name: row.name,
         unit: row.unit,
         rate: Number(row.rate),
@@ -97,8 +98,8 @@ export default function BulkUploadWorkTypes({ onDone }) {
   };
 
   const downloadTemplate = () => {
-    const header = "name,description,unit,rate,category,cost_center";
-    const example = "Limpieza de terreno,Remoción de maleza,metros,50,Limpieza,1";
+    const header = "code,name,description,unit,rate,category,cost_center";
+    const example = "LAB-001,Limpieza de terreno,Remoción de maleza,metros,50,Limpieza,1";
     const csv = `${header}\n${example}`;
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
