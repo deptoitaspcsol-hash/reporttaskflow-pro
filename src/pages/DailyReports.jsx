@@ -383,7 +383,9 @@ export default function DailyReports() {
                 <SelectTrigger><SelectValue placeholder="Seleccionar labor" /></SelectTrigger>
                 <SelectContent>
                   {workTypes.map(wt => (
-                    <SelectItem key={wt.id} value={wt.id}>{wt.name} — ${wt.rate}/{wt.unit}</SelectItem>
+                    <SelectItem key={wt.id} value={wt.id}>
+                      {wt.code ? `[${wt.code}] ` : ""}{wt.name} — ${wt.rate}/{wt.unit}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
