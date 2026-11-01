@@ -3,8 +3,8 @@ import { ClipboardList, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { base44 } from "@/api/base44Client";
-import { safeNext } from "@/api/selfhostedClient";
+import { api } from "@/api/client";
+import { safeNext } from "@/api/client";
 
 /**
  * Pantalla de acceso de la versión autoalojada. Modos:
@@ -32,14 +32,14 @@ export default function LoginPage() {
     finally { setBusy(false); }
   };
 
-  const submitLogin = (e) => { e.preventDefault(); run(async () => { await base44.auth.login(email, password); enter(); }); };
+  const submitLogin = (e) => { e.preventDefault(); run(async () => { await api.auth.login(email, password); enter(); }); };
   const submitForgot = (e) => { e.preventDefault(); run(async () => {
-    await base44.auth.forgotPassword(email);
+    await api.auth.forgotPassword(email);
     setNotice("Si el correo está registrado, te enviamos un enlace para elegir una nueva contraseña.");
   }); };
   const submitSet = (e) => { e.preventDefault(); run(async () => {
     if (password !== confirm) throw new Error("Las contraseñas no coinciden.");
-    await base44.auth.setPassword(token, password);
+    await api.auth.setPassword(token, password);
     window.location.assign("/");
   }); };
 

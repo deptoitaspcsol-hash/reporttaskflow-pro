@@ -1,31 +1,20 @@
-import base44 from "@base44/vite-plugin"
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// VITE_BACKEND=selfhosted → API propia (carpeta server/) en lugar de Base44.
-const selfHosted = process.env.VITE_BACKEND === 'selfhosted'
+// En desarrollo y en "vite preview" las llamadas /api se reenvían a la API local (carpeta server/).
+// En producción las reenvía Caddy (deploy/Caddyfile).
 const apiTarget = process.env.API_PROXY_TARGET || 'http://localhost:3000'
+const apiProxy = { '/api': { target: apiTarget, changeOrigin: false } }
 
 // https://vite.dev/config/
 export default defineConfig({
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
-  // En desarrollo (y en "vite preview") las llamadas /api van a la API local.
-  server: selfHosted ? { proxy: { '/api': { target: apiTarget, changeOrigin: false } } } : undefined,
-  preview: selfHosted ? { proxy: { '/api': { target: apiTarget, changeOrigin: false } } } : undefined,
+  server: { proxy: apiProxy },
+  preview: { proxy: apiProxy },
   logLevel: 'error', // Suppress warnings, only show errors
   plugins: [
-    // El plugin de Base44 (editor visual, analítica, proxy) solo aplica cuando se usa Base44.
-    ...(selfHosted ? [] : [base44({
-      // Support for legacy code that imports the base44 SDK with @/integrations, @/entities, etc.
-      // can be removed if the code has been updated to use the new SDK imports from @base44/sdk
-      legacySDKImports: process.env.BASE44_LEGACY_SDK_IMPORTS === 'true',
-      hmrNotifier: true,
-      navigationNotifier: true,
-      analyticsTracker: true,
-      visualEditAgent: true
-    })]),
     react(),
     VitePWA({
       // "prompt": la versión nueva se instala solo cuando el usuario acepta (ver PWAManager),

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Shield, Plus, Pencil, Trash2, Users, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,33 +44,33 @@ export default function RoleManagement() {
 
   const { data: customRoles = [] } = useQuery({
     queryKey: ["roles"],
-    queryFn: () => base44.entities.Role.list("-created_date"),
+    queryFn: () => api.entities.Role.list("-created_date"),
   });
 
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => api.entities.User.list(),
   });
 
   const allRoles = [...SYSTEM_ROLES, ...customRoles];
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Role.create(data),
+    mutationFn: (data) => api.entities.Role.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["roles"] }); closeForm(); toast.success("Rol creado"); },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Role.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.Role.update(id, data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["roles"] }); closeForm(); toast.success("Rol actualizado"); },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Role.delete(id),
+    mutationFn: (id) => api.entities.Role.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["roles"] }); toast.success("Rol eliminado"); },
   });
 
   const assignRoleMutation = useMutation({
-    mutationFn: ({ userId, roleName }) => base44.entities.User.update(userId, { role: roleName }),
+    mutationFn: ({ userId, roleName }) => api.entities.User.update(userId, { role: roleName }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["users"] }); toast.success("Rol asignado"); },
     onError: () => toast.error("No se pudo asignar el rol."),
   });

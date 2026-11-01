@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { format } from "date-fns";
@@ -28,16 +28,16 @@ export default function PaymentClosings() {
   const printRef = useRef();
   const queryClient = useQueryClient();
 
-  const { data: workers = [] } = useQuery({ queryKey: ["workers"], queryFn: () => base44.entities.Worker.list() });
-  const { data: reports = [] } = useQuery({ queryKey: ["reports"], queryFn: () => base44.entities.DailyReport.list("-date", 1000) });
-  const { data: closings = [] } = useQuery({ queryKey: ["closings"], queryFn: () => base44.entities.PaymentClosing.list("-created_date") });
+  const { data: workers = [] } = useQuery({ queryKey: ["workers"], queryFn: () => api.entities.Worker.list() });
+  const { data: reports = [] } = useQuery({ queryKey: ["reports"], queryFn: () => api.entities.DailyReport.list("-date", 1000) });
+  const { data: closings = [] } = useQuery({ queryKey: ["closings"], queryFn: () => api.entities.PaymentClosing.list("-created_date") });
 
   const createClosingMutation = useMutation({
     mutationFn: async (data) => {
-      const closing = await base44.entities.PaymentClosing.create(data);
+      const closing = await api.entities.PaymentClosing.create(data);
       // Mark reports as closed
       for (const rid of data.report_ids) {
-        await base44.entities.DailyReport.update(rid, { status: "cerrado", closing_id: closing.id });
+        await api.entities.DailyReport.update(rid, { status: "cerrado", closing_id: closing.id });
       }
       return closing;
     },
@@ -50,7 +50,7 @@ export default function PaymentClosings() {
   });
 
   const markPaidMutation = useMutation({
-    mutationFn: ({ id }) => base44.entities.PaymentClosing.update(id, { status: "pagado" }),
+    mutationFn: ({ id }) => api.entities.PaymentClosing.update(id, { status: "pagado" }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["closings"] }),
   });
 

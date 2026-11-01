@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
 import { format, subMonths } from "date-fns";
 import { es } from "date-fns/locale";
@@ -27,19 +27,19 @@ export default function Performance() {
 
   const { data: attendance = [] } = useQuery({
     queryKey: ["attendancePerf"],
-    queryFn: () => base44.entities.Attendance.list("-date", 2000),
+    queryFn: () => api.entities.Attendance.list("-date", 2000),
   });
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list(),
+    queryFn: () => api.entities.Worker.list(),
   });
   const { data: workerGroups = [] } = useQuery({
     queryKey: ["workerGroups"],
-    queryFn: () => base44.entities.WorkerGroup.list(),
+    queryFn: () => api.entities.WorkerGroup.list(),
   });
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasksPerf"],
-    queryFn: () => base44.entities.Task.list("-created_date", 500),
+    queryFn: () => api.entities.Task.list("-created_date", 500),
   });
 
   // Build month keys for range

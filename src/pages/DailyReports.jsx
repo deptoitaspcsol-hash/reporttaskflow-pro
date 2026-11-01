@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { format } from "date-fns";
@@ -42,23 +42,23 @@ export default function DailyReports() {
 
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list(),
+    queryFn: () => api.entities.Worker.list(),
   });
   const { data: workTypes = [] } = useQuery({
     queryKey: ["workTypes"],
-    queryFn: () => base44.entities.WorkType.list(),
+    queryFn: () => api.entities.WorkType.list(),
   });
   const { data: reports = [], isLoading } = useQuery({
     queryKey: ["reports"],
-    queryFn: () => base44.entities.DailyReport.list("-date", 500),
+    queryFn: () => api.entities.DailyReport.list("-date", 500),
   });
 
   const getCurrentUser = async () => {
-    try { const u = await base44.auth.me(); return u?.email || ""; } catch { return ""; }
+    try { const u = await api.auth.me(); return u?.email || ""; } catch { return ""; }
   };
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.DailyReport.create(data),
+    mutationFn: (data) => api.entities.DailyReport.create(data),
     onSuccess: async (created) => {
       queryClient.invalidateQueries({ queryKey: ["reports"] });
       setShowForm(false);
@@ -68,11 +68,11 @@ export default function DailyReports() {
     },
   });
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.DailyReport.delete(id),
+    mutationFn: (id) => api.entities.DailyReport.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reports"] }),
   });
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.DailyReport.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.DailyReport.update(id, data),
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ["reports"] });
       setDetailReport(updated);

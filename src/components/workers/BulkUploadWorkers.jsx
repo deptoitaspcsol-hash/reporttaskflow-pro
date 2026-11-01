@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { Upload, Download, CheckCircle2, XCircle, Loader2, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -97,7 +97,7 @@ export default function BulkUploadWorkers({ onDone }) {
         status: "activo",
       };
       try {
-        await base44.entities.Worker.create(workerData);
+        await api.entities.Worker.create(workerData);
         ok++;
       } catch {
         fail++;

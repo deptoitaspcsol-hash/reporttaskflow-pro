@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useRole } from "@/components/shared/useRole";
 import InstallAppButton from "@/components/pwa/InstallAppButton";
 import OfflineBanner from "@/components/pwa/OfflineBanner";
@@ -89,7 +89,7 @@ export default function Layout({ children, currentPageName }) {
   const connectionProblem = !user && !!userError && !sessionInvalid;
 
   useEffect(() => {
-    if (!isLoading && sessionInvalid) base44.auth.redirectToLogin();
+    if (!isLoading && sessionInvalid) api.auth.redirectToLogin();
   }, [isLoading, sessionInvalid]);
 
   // Cerrar el menú con Escape (accesibilidad en teclado).
@@ -132,7 +132,7 @@ export default function Layout({ children, currentPageName }) {
           </div>
           <p className="text-lg font-semibold text-slate-800">Cuenta bloqueada</p>
           <p className="text-sm text-slate-500">Tu cuenta ha sido bloqueada. Contacta al administrador.</p>
-          <button onClick={() => base44.auth.logout()} className="text-sm text-red-500 underline mt-2">Cerrar sesión</button>
+          <button onClick={() => api.auth.logout()} className="text-sm text-red-500 underline mt-2">Cerrar sesión</button>
         </div>
       </FullScreen>
     );
@@ -236,7 +236,7 @@ export default function Layout({ children, currentPageName }) {
               <p className="text-xs text-slate-400 capitalize truncate">{role}</p>
             </div>
             <button
-              onClick={() => base44.auth.logout()}
+              onClick={() => api.auth.logout()}
               className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
               aria-label="Cerrar sesión"
               title="Cerrar sesión"

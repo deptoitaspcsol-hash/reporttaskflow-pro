@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { Button } from "@/components/ui/button";
@@ -35,26 +35,26 @@ export default function Salaries() {
 
   const { data: scales = [], isLoading } = useQuery({
     queryKey: ["salaryScales"],
-    queryFn: () => base44.entities.SalaryScale.list("-created_date"),
+    queryFn: () => api.entities.SalaryScale.list("-created_date"),
   });
 
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list(),
+    queryFn: () => api.entities.Worker.list(),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.SalaryScale.create(data),
+    mutationFn: (data) => api.entities.SalaryScale.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["salaryScales"] }); closeForm(); toast.success("Escala salarial creada"); },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.SalaryScale.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.SalaryScale.update(id, data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["salaryScales"] }); closeForm(); toast.success("Escala actualizada"); },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.SalaryScale.delete(id),
+    mutationFn: (id) => api.entities.SalaryScale.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["salaryScales"] }); toast.success("Escala eliminada"); },
   });
 

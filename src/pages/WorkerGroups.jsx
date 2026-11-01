@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Users, Plus, Pencil, Trash2, Phone, Shield } from "lucide-react";
 import { useRole } from "../components/shared/useRole";
@@ -36,27 +36,27 @@ export default function WorkerGroups() {
 
   const { data: groups = [], isLoading } = useQuery({
     queryKey: ["workerGroups"],
-    queryFn: () => base44.entities.WorkerGroup.list("-created_date"),
+    queryFn: () => api.entities.WorkerGroup.list("-created_date"),
   });
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list(),
+    queryFn: () => api.entities.Worker.list(),
   });
   const { data: reports = [] } = useQuery({
     queryKey: ["reports"],
-    queryFn: () => base44.entities.DailyReport.list("-date", 1000),
+    queryFn: () => api.entities.DailyReport.list("-date", 1000),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.WorkerGroup.create(data),
+    mutationFn: (data) => api.entities.WorkerGroup.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workerGroups"] }); closeForm(); },
   });
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.WorkerGroup.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.WorkerGroup.update(id, data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workerGroups"] }); closeForm(); },
   });
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.WorkerGroup.delete(id),
+    mutationFn: (id) => api.entities.WorkerGroup.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workerGroups"] }),
   });
 

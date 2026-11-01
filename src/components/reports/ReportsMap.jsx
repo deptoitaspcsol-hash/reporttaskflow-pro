@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,7 +43,7 @@ function LocationForm({ open, onClose, initialName, onSave }) {
 
   const handleSave = async () => {
     if (!form.name || !form.lat || !form.lng) return;
-    await base44.entities.Location.create({ ...form, lat: Number(form.lat), lng: Number(form.lng) });
+    await api.entities.Location.create({ ...form, lat: Number(form.lat), lng: Number(form.lng) });
     onSave();
   };
 
@@ -95,7 +95,7 @@ export default function ReportsMap({ reports, groups, filterGroup }) {
 
   const { data: locations = [] } = useQuery({
     queryKey: ["locations"],
-    queryFn: () => base44.entities.Location.list(),
+    queryFn: () => api.entities.Location.list(),
   });
 
   // Group reports by location, computing totals

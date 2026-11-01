@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
 import { format, startOfMonth, endOfMonth, subMonths } from "date-fns";
 import { Users, MapPin, Briefcase, UsersRound, FileText } from "lucide-react";
@@ -27,9 +27,9 @@ export default function Reports() {
   const printRef = useRef();
   const { canExport, user } = useRole("reports");
 
-  const { data: reports = [] } = useQuery({ queryKey: ["reports"], queryFn: () => base44.entities.DailyReport.list("-date", 2000) });
-  const { data: workers = [] } = useQuery({ queryKey: ["workers"], queryFn: () => base44.entities.Worker.list() });
-  const { data: workerGroups = [] } = useQuery({ queryKey: ["workerGroups"], queryFn: () => base44.entities.WorkerGroup.list() });
+  const { data: reports = [] } = useQuery({ queryKey: ["reports"], queryFn: () => api.entities.DailyReport.list("-date", 2000) });
+  const { data: workers = [] } = useQuery({ queryKey: ["workers"], queryFn: () => api.entities.Worker.list() });
+  const { data: workerGroups = [] } = useQuery({ queryKey: ["workerGroups"], queryFn: () => api.entities.WorkerGroup.list() });
 
   const filtered = useMemo(() =>
     reports.filter(r => {

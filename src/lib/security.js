@@ -1,6 +1,6 @@
 // Utilidades de seguridad del lado del cliente.
 // OJO: son defensas de interfaz. La autorización real (quién puede leer/editar cada entidad)
-// debe estar configurada también en Base44; ver SECURITY.md.
+// se aplica en el servidor (server/src/policy.js); ver SECURITY.md.
 
 /**
  * Devuelve la URL solo si es http(s); si no (javascript:, data:, vbscript:...) devuelve null.

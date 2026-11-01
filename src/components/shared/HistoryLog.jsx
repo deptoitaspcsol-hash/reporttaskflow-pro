@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { Clock, User, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -36,7 +36,7 @@ function formatDate(iso) {
 export default function HistoryLog({ entityType, entityId }) {
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ["historial", entityType, entityId],
-    queryFn: () => base44.entities.Historial.filter({ entity_type: entityType, entity_id: entityId }, "-modified_at", 50),
+    queryFn: () => api.entities.Historial.filter({ entity_type: entityType, entity_id: entityId }, "-modified_at", 50),
     enabled: !!entityId,
   });
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
 import { History, Search, Eye, CheckCircle2, DollarSign, Calendar, User, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export default function PaymentHistory() {
 
   const { data: closings = [], isLoading } = useQuery({
     queryKey: ["closings"],
-    queryFn: () => base44.entities.PaymentClosing.list("-closing_date", 1000),
+    queryFn: () => api.entities.PaymentClosing.list("-closing_date", 1000),
   });
 
   const paid = closings.filter((c) => c.status === "pagado");

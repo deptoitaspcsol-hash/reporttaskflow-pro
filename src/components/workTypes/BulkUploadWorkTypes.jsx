@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { Upload, Download, CheckCircle2, XCircle, Loader2, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -105,7 +105,7 @@ export default function BulkUploadWorkTypes({ onDone, existingWorkTypes = [] }) 
         cost_center_2: String(row.cost_center_2 || "").trim() || undefined,
       };
       try {
-        await base44.entities.WorkType.create(workTypeData);
+        await api.entities.WorkType.create(workTypeData);
         ok++;
       } catch {
         fail++;

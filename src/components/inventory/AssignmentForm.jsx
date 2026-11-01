@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { format } from "date-fns";
 
 const CONDITIONS = [
@@ -43,14 +43,14 @@ export default function AssignmentForm({ open, onClose, equipment, workers, grou
       equipment_code: equipment.code || "",
       maintenance_cost: form.maintenance_cost !== "" ? Number(form.maintenance_cost) : undefined,
     };
-    await base44.entities.EquipmentAssignment.create(data);
+    await api.entities.EquipmentAssignment.create(data);
 
     // Update equipment status accordingly
     let newStatus = equipment.status;
     if (form.type === "entrega") newStatus = "asignado";
     else if (form.type === "devolucion") newStatus = "disponible";
     else if (form.type === "mantenimiento") newStatus = "mantenimiento";
-    await base44.entities.Equipment.update(equipment.id, { status: newStatus });
+    await api.entities.Equipment.update(equipment.id, { status: newStatus });
 
     setSaving(false);
     onSave();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Shield, UserPlus, Briefcase, Ban, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,13 +25,13 @@ export default function UserManagement() {
 
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: () => api.entities.User.list(),
   });
 
   // Roles personalizados (los crea "Roles y Permisos"): antes no se podían elegir desde aquí.
   const { data: customRoles = [] } = useQuery({
     queryKey: ["roles"],
-    queryFn: () => base44.entities.Role.list(),
+    queryFn: () => api.entities.Role.list(),
     enabled: isAdmin,
     retry: false,
   });
@@ -64,7 +64,7 @@ export default function UserManagement() {
   };
 
   const updateRoleMutation = useMutation({
-    mutationFn: ({ id, role }) => base44.entities.User.update(id, { role }),
+    mutationFn: ({ id, role }) => api.entities.User.update(id, { role }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("Rol actualizado");
@@ -73,7 +73,7 @@ export default function UserManagement() {
   });
 
   const toggleBlockMutation = useMutation({
-    mutationFn: ({ id, blocked }) => base44.entities.User.update(id, { blocked }),
+    mutationFn: ({ id, blocked }) => api.entities.User.update(id, { blocked }),
     onSuccess: (_, { blocked }) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success(blocked ? "Usuario bloqueado" : "Usuario desbloqueado");
@@ -90,7 +90,7 @@ export default function UserManagement() {
     setInviting(true);
     try {
       // inviteUser siempre envía el correo de invitación. Solo acepta "admin" o "user".
-      const invited = await base44.users.inviteUser(email, inviteRole === "admin" ? "admin" : "user");
+      const invited = await api.users.inviteUser(email, inviteRole === "admin" ? "admin" : "user");
       // Versión autoalojada sin correo configurado: el servidor devuelve el enlace para entregarlo por otro medio.
       if (invited?.invite_url) {
         try { await navigator.clipboard.writeText(invited.invite_url); } catch { /* sin permiso de portapapeles */ }
@@ -102,11 +102,11 @@ export default function UserManagement() {
       let newUser = null;
       for (let attempt = 0; attempt < 6 && !newUser; attempt++) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const all = await base44.entities.User.list();
+        const all = await api.entities.User.list();
         newUser = all.find((u) => String(u.email || "").toLowerCase() === email);
       }
       if (newUser) {
-        await base44.entities.User.update(newUser.id, {
+        await api.entities.User.update(newUser.id, {
           role: inviteRole,
           ...(inviteJobTitle.trim() ? { job_title: inviteJobTitle.trim() } : {}),
         });
