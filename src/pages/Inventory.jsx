@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,23 +40,23 @@ export default function Inventory() {
 
   const { data: equipment = [] } = useQuery({
     queryKey: ["equipment"],
-    queryFn: () => base44.entities.Equipment.list("-created_date", 200),
+    queryFn: () => api.entities.Equipment.list("-created_date", 200),
   });
   const { data: assignments = [] } = useQuery({
     queryKey: ["assignments"],
-    queryFn: () => base44.entities.EquipmentAssignment.list("-date", 500),
+    queryFn: () => api.entities.EquipmentAssignment.list("-date", 500),
   });
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.filter({ status: "activo" }),
+    queryFn: () => api.entities.Worker.filter({ status: "activo" }),
   });
   const { data: groups = [] } = useQuery({
     queryKey: ["workerGroups"],
-    queryFn: () => base44.entities.WorkerGroup.list(),
+    queryFn: () => api.entities.WorkerGroup.list(),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Equipment.delete(id),
+    mutationFn: (id) => api.entities.Equipment.delete(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["equipment"] }),
   });
 

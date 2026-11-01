@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { MODULES, ACTIONS } from "@/components/roles/PermissionsMatrix";
 
 // Permisos de los roles del sistema (los mismos que muestra la pantalla "Roles y Permisos").
@@ -27,12 +27,12 @@ const SYSTEM_PERMISSIONS = {
  * `useRole("workers")` hace que canWrite/canDelete valgan solo para ese módulo.
  *
  * IMPORTANTE: esto controla lo que se ve en pantalla. La protección real de los datos debe
- * estar en las reglas de acceso de Base44 (ver SECURITY.md).
+ * estar en las reglas del servidor (server/src/policy.js; ver SECURITY.md).
  */
 export function useRole(moduleKey) {
   const { data: user, isLoading: userLoading, error: userError, refetch: refetchUser } = useQuery({
     queryKey: ["currentUser"],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => api.auth.me(),
     staleTime: 60000,
   });
 
@@ -41,7 +41,7 @@ export function useRole(moduleKey) {
 
   const { data: customRoles = [], isLoading: rolesLoading } = useQuery({
     queryKey: ["roles"],
-    queryFn: () => base44.entities.Role.list(),
+    queryFn: () => api.entities.Role.list(),
     enabled: !!user && !isSystemRole,
     staleTime: 60000,
     retry: false,

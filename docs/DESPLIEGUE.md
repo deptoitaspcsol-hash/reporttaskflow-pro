@@ -101,5 +101,5 @@ DATABASE_URL=postgres://app_rw:app_pw@127.0.0.1:5432/labores MIGRATE_DATABASE_UR
   AUTO_MIGRATE=true PUBLIC_URL=http://localhost:5173 BOOTSTRAP_ADMIN_EMAIL=admin@x.com BOOTSTRAP_ADMIN_PASSWORD='Clave-De-Prueba-123' \
   UPLOAD_DIR=/tmp/labores-uploads node src/index.js
 # 3) Interfaz (en otra terminal, en la raíz del repositorio): reenvía /api a localhost:3000
-VITE_BACKEND=selfhosted npm run dev
+npm run dev
 ```

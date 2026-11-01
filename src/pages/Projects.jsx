@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { Button } from "@/components/ui/button";
@@ -31,26 +31,26 @@ export default function Projects() {
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["projects"],
-    queryFn: () => base44.entities.Project.list("-created_date"),
+    queryFn: () => api.entities.Project.list("-created_date"),
   });
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],
-    queryFn: () => base44.entities.Task.list("-created_date", 500),
+    queryFn: () => api.entities.Task.list("-created_date", 500),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Project.create(data),
+    mutationFn: (data) => api.entities.Project.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["projects"] }); closeForm(); toast.success("Proyecto creado"); },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Project.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.Project.update(id, data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["projects"] }); closeForm(); toast.success("Proyecto actualizado"); },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Project.delete(id),
+    mutationFn: (id) => api.entities.Project.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["projects"] }); toast.success("Proyecto eliminado"); },
   });
 

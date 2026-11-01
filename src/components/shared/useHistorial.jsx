@@ -1,4 +1,4 @@
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 
 const IGNORED_FIELDS = ["id", "created_date", "updated_date", "created_by"];
 
@@ -32,7 +32,7 @@ export async function saveHistorialChanges({ entityType, entityId, entityLabel, 
   }
 
   if (entries.length > 0) {
-    await base44.entities.Historial.bulkCreate(entries);
+    await api.entities.Historial.bulkCreate(entries);
   }
 }
 
@@ -40,7 +40,7 @@ export async function saveHistorialChanges({ entityType, entityId, entityLabel, 
  * Saves a single "creado" history entry.
  */
 export async function saveHistorialCreated({ entityType, entityId, entityLabel, userEmail }) {
-  await base44.entities.Historial.create({
+  await api.entities.Historial.create({
     entity_type: entityType,
     entity_id: entityId,
     entity_label: entityLabel,

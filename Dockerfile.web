@@ -4,8 +4,6 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 COPY . .
-# La versión autoalojada habla con /api (la API propia), no con Base44.
-ENV VITE_BACKEND=selfhosted
 RUN npm run build
 
 FROM caddy:2-alpine

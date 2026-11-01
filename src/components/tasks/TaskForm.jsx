@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,19 +38,19 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
 
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list(),
+    queryFn: () => api.entities.Worker.list(),
   });
   const { data: workTypes = [] } = useQuery({
     queryKey: ["workTypes"],
-    queryFn: () => base44.entities.WorkType.list(),
+    queryFn: () => api.entities.WorkType.list(),
   });
   const { data: groups = [] } = useQuery({
     queryKey: ["workerGroups"],
-    queryFn: () => base44.entities.WorkerGroup.list(),
+    queryFn: () => api.entities.WorkerGroup.list(),
   });
   const { data: projects = [] } = useQuery({
     queryKey: ["projects"],
-    queryFn: () => base44.entities.Project.list(),
+    queryFn: () => api.entities.Project.list(),
   });
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -96,7 +96,7 @@ export default function TaskForm({ task, onSubmit, onCancel }) {
     setUploading(true);
     const urls = [...(form.attachments || [])];
     for (const file of files) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await api.integrations.Core.UploadFile({ file });
       urls.push(file_url);
     }
     set("attachments", urls);

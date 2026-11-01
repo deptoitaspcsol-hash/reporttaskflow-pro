@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { Button } from "@/components/ui/button";
@@ -34,21 +34,21 @@ export default function Attendance() {
 
   const { data: records = [], isLoading } = useQuery({
     queryKey: ["attendance", selectedDate],
-    queryFn: () => base44.entities.Attendance.filter({ date: selectedDate }, "-created_date"),
+    queryFn: () => api.entities.Attendance.filter({ date: selectedDate }, "-created_date"),
   });
 
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list(),
+    queryFn: () => api.entities.Worker.list(),
   });
 
   const { data: workTypes = [] } = useQuery({
     queryKey: ["workTypes"],
-    queryFn: () => base44.entities.WorkType.list(),
+    queryFn: () => api.entities.WorkType.list(),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Attendance.create(data),
+    mutationFn: (data) => api.entities.Attendance.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["attendance"] });
       setShowForm(false); setEditing(null);
@@ -57,7 +57,7 @@ export default function Attendance() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Attendance.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.Attendance.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["attendance"] });
       setShowForm(false); setEditing(null);
@@ -66,7 +66,7 @@ export default function Attendance() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Attendance.delete(id),
+    mutationFn: (id) => api.entities.Attendance.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["attendance"] });
       toast.success("Registro eliminado");

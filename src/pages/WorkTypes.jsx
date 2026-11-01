@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Briefcase, Plus, Pencil, Trash2, DollarSign } from "lucide-react";
 import { useRole } from "../components/shared/useRole";
@@ -31,19 +31,19 @@ export default function WorkTypes() {
 
   const { data: workTypes = [], isLoading } = useQuery({
     queryKey: ["workTypes"],
-    queryFn: () => base44.entities.WorkType.list("-created_date"),
+    queryFn: () => api.entities.WorkType.list("-created_date"),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.WorkType.create(data),
+    mutationFn: (data) => api.entities.WorkType.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workTypes"] }); closeForm(); },
   });
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.WorkType.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.WorkType.update(id, data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workTypes"] }); closeForm(); },
   });
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.WorkType.delete(id),
+    mutationFn: (id) => api.entities.WorkType.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workTypes"] }),
   });
 

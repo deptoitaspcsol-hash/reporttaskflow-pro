@@ -1,6 +1,7 @@
-// Cliente de la API propia (server/). Imita la parte del SDK de Base44 que usa esta aplicación
-// (entities.X.list/filter/get/create/bulkCreate/update/delete, auth.*, users.inviteUser, integrations.Core.UploadFile),
-// de modo que las páginas funcionan igual sin cambios.
+// Cliente de la API propia (carpeta server/). Todas las páginas lo usan como `api`:
+//   api.entities.X.list / filter / get / create / bulkCreate / update / delete
+//   api.auth.me / login / logout / redirectToLogin / changePassword / forgotPassword / setPassword
+//   api.users.inviteUser   ·   api.integrations.Core.UploadFile
 
 const HEADERS = { "X-Requested-With": "labores" }; // protección CSRF: el servidor lo exige en peticiones que modifican datos
 
@@ -62,36 +63,34 @@ function entityApi(name) {
   };
 }
 
-export function createSelfHostedClient() {
-  return {
-    entities: new Proxy({}, { get: (cache, name) => (cache[name] ??= entityApi(String(name))) }),
-    auth: {
-      me: () => request("GET", "/api/auth/me"),
-      login: (email, password) => request("POST", "/api/auth/login", { body: { email, password } }),
-      async logout(redirectTo) {
-        try { await request("POST", "/api/auth/logout", { body: {} }); } catch { /* aunque falle, se sale de la sesión local */ }
-        window.location.assign(typeof redirectTo === "string" && redirectTo.startsWith("/") ? redirectTo : "/login");
-      },
-      redirectToLogin: (from) => goToLogin(typeof from === "string" ? safeNext(from) : undefined),
-      changePassword: (current_password, new_password) => request("POST", "/api/auth/change-password", { body: { current_password, new_password } }),
-      forgotPassword: (email) => request("POST", "/api/auth/forgot", { body: { email } }),
-      setPassword: (token, password) => request("POST", "/api/auth/set-password", { body: { token, password } }),
+export const api = {
+  entities: new Proxy({}, { get: (cache, name) => (cache[name] ??= entityApi(String(name))) }),
+  auth: {
+    me: () => request("GET", "/api/auth/me"),
+    login: (email, password) => request("POST", "/api/auth/login", { body: { email, password } }),
+    async logout(redirectTo) {
+      try { await request("POST", "/api/auth/logout", { body: {} }); } catch { /* aunque falle, se sale de la sesión local */ }
+      window.location.assign(typeof redirectTo === "string" && redirectTo.startsWith("/") ? redirectTo : "/login");
     },
-    users: {
-      // Devuelve { invite_url } cuando el servidor no puede enviar el correo (sin SMTP configurado).
-      inviteUser: (email, role) => request("POST", "/api/users/invite", { body: { email, role } }),
-    },
-    integrations: {
-      Core: {
-        async UploadFile({ file }) {
-          const form = new FormData();
-          form.append("file", file);
-          return request("POST", "/api/files", { form });
-        },
+    redirectToLogin: (from) => goToLogin(typeof from === "string" ? safeNext(from) : undefined),
+    changePassword: (current_password, new_password) => request("POST", "/api/auth/change-password", { body: { current_password, new_password } }),
+    forgotPassword: (email) => request("POST", "/api/auth/forgot", { body: { email } }),
+    setPassword: (token, password) => request("POST", "/api/auth/set-password", { body: { token, password } }),
+  },
+  users: {
+    // Devuelve { invite_url } cuando el servidor no puede enviar el correo (sin SMTP configurado).
+    inviteUser: (email, role) => request("POST", "/api/users/invite", { body: { email, role } }),
+  },
+  integrations: {
+    Core: {
+      async UploadFile({ file }) {
+        const form = new FormData();
+        form.append("file", file);
+        return request("POST", "/api/files", { form });
       },
     },
-  };
-}
+  },
+};
 
 /**
  * Devuelve una ruta interna segura para volver tras iniciar sesión. Acepta "/Tasks" o una URL absoluta de este

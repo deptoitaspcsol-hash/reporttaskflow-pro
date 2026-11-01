@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 
 const CATEGORIES = [
   { value: "herramienta_manual", label: "Herramienta Manual" },
@@ -35,8 +35,8 @@ export default function EquipmentForm({ open, onClose, equipment, onSave }) {
       purchase_cost: form.purchase_cost !== "" ? Number(form.purchase_cost) : undefined,
       current_value: form.current_value !== "" ? Number(form.current_value) : undefined,
     };
-    if (isEdit) await base44.entities.Equipment.update(equipment.id, data);
-    else await base44.entities.Equipment.create(data);
+    if (isEdit) await api.entities.Equipment.update(equipment.id, data);
+    else await api.entities.Equipment.create(data);
     setSaving(false);
     onSave();
   };

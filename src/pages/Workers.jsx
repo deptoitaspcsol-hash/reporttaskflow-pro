@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Users, Plus, Pencil, Trash2, Phone, IdCard, Search, Camera, Upload, X, DollarSign } from "lucide-react";
 import { useRole } from "../components/shared/useRole";
@@ -40,24 +40,24 @@ export default function Workers() {
 
   const { data: workers = [], isLoading } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list("-created_date"),
+    queryFn: () => api.entities.Worker.list("-created_date"),
   });
 
   const { data: salaryScales = [] } = useQuery({
     queryKey: ["salaryScales"],
-    queryFn: () => base44.entities.SalaryScale.list(),
+    queryFn: () => api.entities.SalaryScale.list(),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Worker.create(data),
+    mutationFn: (data) => api.entities.Worker.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workers"] }); closeForm(); },
   });
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Worker.update(id, data),
+    mutationFn: ({ id, data }) => api.entities.Worker.update(id, data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workers"] }); closeForm(); },
   });
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Worker.delete(id),
+    mutationFn: (id) => api.entities.Worker.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workers"] }),
   });
 
@@ -95,7 +95,7 @@ export default function Workers() {
       stopCamera();
       setUploadingPhoto(true);
       const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await api.integrations.Core.UploadFile({ file });
       setForm(f => ({ ...f, photo_url: file_url }));
       setUploadingPhoto(false);
     }, "image/jpeg", 0.85);
@@ -105,7 +105,7 @@ export default function Workers() {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingPhoto(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const { file_url } = await api.integrations.Core.UploadFile({ file });
     setForm(f => ({ ...f, photo_url: file_url }));
     setUploadingPhoto(false);
   };

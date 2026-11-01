@@ -6,9 +6,7 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import LoginPage from '@/components/auth/LoginPage';
-import { SELF_HOSTED } from '@/api/backend';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -19,14 +17,14 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   : <>{children}</>;
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, authError, navigateToLogin } = useAuth();
   const location = useLocation();
 
-  // Versión autoalojada: la pantalla de acceso no necesita sesión.
-  if (SELF_HOSTED && location.pathname === '/login') return <LoginPage />;
+  // La pantalla de acceso no necesita sesión.
+  if (location.pathname === '/login') return <LoginPage />;
 
-  // Show loading spinner while checking app public settings or auth
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  // Spinner mientras se comprueba la sesión
+  if (isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
@@ -36,9 +34,7 @@ const AuthenticatedApp = () => {
 
   // Handle authentication errors
   if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
+    if (authError.type === 'auth_required') {
       // Redirect to login automatically
       navigateToLogin();
       return null;

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -21,27 +21,27 @@ import LaborCostSummary from "../components/dashboard/LaborCostSummary";
 export default function Dashboard() {
   const { data: workers = [] } = useQuery({
     queryKey: ["workers"],
-    queryFn: () => base44.entities.Worker.list(),
+    queryFn: () => api.entities.Worker.list(),
   });
   const { data: reports = [] } = useQuery({
     queryKey: ["reports"],
-    queryFn: () => base44.entities.DailyReport.list("-date", 200),
+    queryFn: () => api.entities.DailyReport.list("-date", 200),
   });
   const { data: closings = [] } = useQuery({
     queryKey: ["closings"],
-    queryFn: () => base44.entities.PaymentClosing.list("-created_date", 50),
+    queryFn: () => api.entities.PaymentClosing.list("-created_date", 50),
   });
   const { data: workerGroups = [] } = useQuery({
     queryKey: ["workerGroups"],
-    queryFn: () => base44.entities.WorkerGroup.list(),
+    queryFn: () => api.entities.WorkerGroup.list(),
   });
   const { data: tasks = [] } = useQuery({
     queryKey: ["tasks"],
-    queryFn: () => base44.entities.Task.list("-created_date", 100),
+    queryFn: () => api.entities.Task.list("-created_date", 100),
   });
   const { data: attendance = [] } = useQuery({
     queryKey: ["attendanceAll"],
-    queryFn: () => base44.entities.Attendance.list("-date", 200),
+    queryFn: () => api.entities.Attendance.list("-date", 200),
   });
 
   const todayStr = format(new Date(), "yyyy-MM-dd");

@@ -1,7 +1,7 @@
 # Arquitectura (versión autoalojada)
 
-Esta versión reemplaza el backend de Base44 por uno propio. **La interfaz casi no cambia**: solo se sustituyó el archivo que
-habla con el servidor (`src/api/base44Client.js` → `src/api/selfhostedClient.js`), con la misma interfaz que usaban las páginas.
+La aplicación corre en un servidor propio: una interfaz React, una API Node y una base de datos PostgreSQL. Todas las páginas hablan con
+el servidor a través de un solo archivo, `src/api/client.js` (`api.entities.X.list/filter/create/update/delete`, `api.auth.*`, archivos).
 
 ```mermaid
 flowchart LR
@@ -69,7 +69,7 @@ Límites: 1000 registros por lista por defecto (máximo 10 000), 1000 por carga 
 ## Decisiones y compromisos conocidos
 
 - **Sin tiempo real.** Esta app no usa suscripciones; `subscribe` devuelve una función vacía. (`assettrack-pro` sí las usa y requeriría SSE.)
-- **Cierres de pago no transaccionales.** La interfaz crea el cierre y luego actualiza cada reporte en llamadas separadas (igual que con Base44).
+- **Cierres de pago no transaccionales.** La interfaz crea el cierre y luego actualiza cada reporte en llamadas separadas (como en la versión original).
   Si falla a la mitad puede quedar un cierre sin todos sus reportes marcados. Mejora recomendada: un endpoint `POST /api/payment-closings` que lo haga en una transacción.
-- **Sin control de concurrencia optimista.** Dos personas editando el mismo registro a la vez: gana la última (como en Base44).
+- **Sin control de concurrencia optimista.** Dos personas editando el mismo registro a la vez: gana la última (como en la versión original).
 - **Un solo servidor.** No hay alta disponibilidad; la protección es el respaldo (ver `DESPLIEGUE.md`).

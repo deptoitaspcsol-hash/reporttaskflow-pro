@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { api } from "@/api/client";
 import { Button } from "@/components/ui/button";
 import { Upload, Loader2, Paperclip, Download, Trash2, FileText } from "lucide-react";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ export default function AttachmentsSection({ attachments = [], onUpdate, readOnl
     let failed = 0;
     for (const file of valid) {
       try {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const { file_url } = await api.integrations.Core.UploadFile({ file });
         if (!safeHttpUrl(file_url)) throw new Error("URL no válida");
         items.push({ url: file_url, name: sanitizeFileName(file.name), type: file.type });
       } catch {
