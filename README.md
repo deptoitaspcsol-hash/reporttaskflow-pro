@@ -37,3 +37,26 @@ Open [Base44.com](http://Base44.com) and click on Publish.
 Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
 
 Support: [https://app.base44.com/support](https://app.base44.com/support)
+
+
+## PWA (app instalable)
+
+Se puede instalar en el celular o la computadora y abre la interfaz sin conexión.
+
+- **Configuración:** `vite.config.js` (`vite-plugin-pwa`). El manifest y el service worker se generan en `npm run build`.
+- **Iconos:** `public/icons/` y `public/apple-touch-icon.png`.
+- **Actualizaciones:** al haber versión nueva aparece un aviso con el botón "Actualizar" (`src/components/pwa/PWAManager.jsx`).
+- **Instalación:** botón "Instalar app" en el menú lateral. En iPhone/iPad: Safari → Compartir → Añadir a pantalla de inicio.
+- **Sin conexión:** solo se guarda la interfaz. Datos y sesión (`/api/`) siempre van a la red; sin red se muestra "No se pudo conectar".
+- **Probar en local:** el service worker solo existe en el build: `npm run build && npm run preview`, y revisar DevTools → Application.
+
+## Reportes corporativos
+
+- **Imprimir:** todos los botones "Imprimir" usan el mismo membrete (empresa, título, período, fecha, usuario y pie confidencial con
+  número de página) desde `src/lib/corporate.js`.
+- **Exportar PDF:** Reporte Diario y Reportes generan un PDF con indicadores, tablas con totales y paginación. La librería se carga solo al exportar.
+- **Exportar CSV:** abre bien en Excel (acentos) y neutraliza fórmulas.
+- **Personalizar:** el nombre de la empresa y el color están en `CORPORATE` (`src/lib/corporate.js`).
+- El permiso "Exportar" de la matriz de roles controla los botones de CSV y PDF.
+
+Ver también [SECURITY.md](SECURITY.md).

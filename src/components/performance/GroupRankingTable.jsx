@@ -1,6 +1,5 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Minus, Medal } from "lucide-react";
 
 const MEDAL_COLORS = ["text-amber-500", "text-slate-400", "text-orange-600"];

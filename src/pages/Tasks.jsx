@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Search, ListTodo, History, Paperclip, CalendarDays, LayoutList, FolderOpen } from "lucide-react";
+import { Plus, Search, ListTodo, History, Paperclip, CalendarDays, LayoutList } from "lucide-react";
 import PageHeader from "../components/shared/PageHeader";
 import EmptyState from "../components/shared/EmptyState";
 import TaskCard from "../components/tasks/TaskCard";
@@ -17,8 +17,6 @@ import AttachmentsSection from "../components/shared/AttachmentsSection";
 import TaskCalendarView from "../components/tasks/TaskCalendarView";
 import TaskGroupFilter from "../components/tasks/TaskGroupFilter";
 import TasksByWorker from "../components/tasks/TasksByWorker";
-import TaskDueDate from "../components/tasks/TaskDueDate";
-import TaskPriorityBadge from "../components/tasks/TaskPriorityBadge";
 import { useTaskNotifications } from "../components/notifications/useTaskNotifications";
 
 const STATUSES = [
@@ -37,7 +35,7 @@ const STATUS_COLORS = {
 };
 
 export default function Tasks() {
-  const { canWrite, canDelete } = useRole();
+  const { canWrite, canDelete } = useRole("tasks");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);

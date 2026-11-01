@@ -5,8 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Clock, TrendingUp, DollarSign } from "lucide-react";
+import { Clock, TrendingUp } from "lucide-react";
 
 const REGULAR_HOURS_PER_DAY = 8;
 const WORK_DAYS_PER_MONTH = 26;

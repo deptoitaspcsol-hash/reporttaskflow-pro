@@ -23,7 +23,7 @@ const defaultForm = () => ({
 });
 
 export default function Projects() {
-  const { canWrite, canDelete } = useRole();
+  const { canWrite, canDelete } = useRole("projects");
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);

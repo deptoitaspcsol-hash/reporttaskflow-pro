@@ -2,8 +2,7 @@ import React, { useState, useRef, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { format, startOfMonth, endOfMonth, subMonths } from "date-fns";
-import { es } from "date-fns/locale";
-import { BarChart3, Users, MapPin, Briefcase, UsersRound } from "lucide-react";
+import { Users, MapPin, Briefcase, UsersRound, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import PageHeader from "../components/shared/PageHeader";
 import PrintButton from "../components/shared/PrintButton";
+import { useRole } from "../components/shared/useRole";
+import { exportCorporatePDF, formatMoney } from "@/lib/corporate";
+import { toast } from "sonner";
 
 const COLORS = ["#10b981", "#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899", "#84cc16"];
 
@@ -23,6 +25,7 @@ export default function Reports() {
   const [dateTo, setDateTo] = useState(format(endOfMonth(now), "yyyy-MM-dd"));
   const [groupFilter, setGroupFilter] = useState("all");
   const printRef = useRef();
+  const { canExport, user } = useRole("reports");
 
   const { data: reports = [] } = useQuery({ queryKey: ["reports"], queryFn: () => base44.entities.DailyReport.list("-date", 2000) });
   const { data: workers = [] } = useQuery({ queryKey: ["workers"], queryFn: () => base44.entities.Worker.list() });
@@ -85,6 +88,33 @@ export default function Reports() {
     return Object.values(map).sort((a, b) => b.total - a.total);
   }, [filtered]);
 
+  // PDF con las cuatro vistas completas (la impresión solo toma la pestaña activa).
+  const exportPDF = async () => {
+    const money = { header: "Monto", key: "total", money: true };
+    try {
+      await exportCorporatePDF({
+        fileName: `reporte_labores_${dateFrom}_${dateTo}.pdf`,
+        title: "Reporte de Labores",
+        subtitle: `Grupo: ${groupFilter === "all" ? "Todos" : groupFilter}`,
+        period: `${dateFrom} — ${dateTo}`,
+        generatedBy: user?.full_name || user?.email,
+        summary: [
+          { label: "Monto total", value: formatMoney(totalAmount) },
+          { label: "Tareas", value: String(filtered.length) },
+          { label: "Trabajadores", value: String(byWorker.length) },
+        ],
+        sections: [
+          { heading: "Por grupo", columns: [{ header: "Grupo", key: "name" }, { header: "Trabajadores", key: "workerCount", align: "right" }, { header: "Tareas", key: "tasks", align: "right" }, money], rows: byGroup, totals: { tasks: filtered.length, total: totalAmount } },
+          { heading: "Por trabajador", columns: [{ header: "Trabajador", key: "name" }, { header: "Tareas", key: "tasks", align: "right" }, money], rows: byWorker, totals: { tasks: filtered.length, total: totalAmount } },
+          { heading: "Por labor", columns: [{ header: "Labor", key: "name" }, { header: "Tareas", key: "tasks", align: "right" }, money], rows: byWorkType, totals: { tasks: filtered.length, total: totalAmount } },
+          { heading: "Por ubicación", columns: [{ header: "Ubicación", key: "name" }, { header: "Tareas", key: "tasks", align: "right" }, money], rows: byLocation, totals: { tasks: filtered.length, total: totalAmount } },
+        ],
+      });
+    } catch {
+      toast.error("No se pudo generar el PDF. Intenta de nuevo.");
+    }
+  };
+
   const setQuickRange = (months) => {
     const d = subMonths(now, months);
     setDateFrom(format(startOfMonth(d), "yyyy-MM-dd"));
@@ -96,7 +126,21 @@ export default function Reports() {
       <PageHeader
         title="Reportes y Estadísticas"
         subtitle={`$${totalAmount.toLocaleString()} en ${filtered.length} tareas`}
-        actions={<PrintButton contentRef={printRef} />}
+        actions={
+          <div className="flex gap-2">
+            {canExport && (
+              <Button variant="outline" size="sm" onClick={exportPDF} className="gap-2">
+                <FileText className="w-4 h-4" /> Exportar PDF
+              </Button>
+            )}
+            <PrintButton
+              contentRef={printRef}
+              title="Reporte de Labores"
+              subtitle={`Grupo: ${groupFilter === "all" ? "Todos" : groupFilter} · ${formatMoney(totalAmount)} en ${filtered.length} tareas`}
+              period={`${dateFrom} — ${dateTo}`}
+            />
+          </div>
+        }
       />
 
       {/* Filters */}

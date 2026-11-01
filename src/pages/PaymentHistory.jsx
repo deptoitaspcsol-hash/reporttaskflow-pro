@@ -1,8 +1,6 @@
 import React, { useState, useRef, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
 import { History, Search, Eye, CheckCircle2, DollarSign, Calendar, User, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +20,7 @@ export default function PaymentHistory() {
   const [periodTo, setPeriodTo] = useState("");
   const [showDetail, setShowDetail] = useState(null);
   const printRef = useRef();
+  const detailRef = useRef(); // la ficha del diálogo tiene su propia referencia (antes imprimía la lista completa)
 
   const { data: closings = [], isLoading } = useQuery({
     queryKey: ["closings"],
@@ -64,7 +63,14 @@ export default function PaymentHistory() {
       <PageHeader
         title="Historial de Pagos"
         subtitle={`${filtered.length} pagos realizados`}
-        actions={<PrintButton contentRef={printRef} />}
+        actions={
+          <PrintButton
+            contentRef={printRef}
+            title="Historial de Pagos"
+            subtitle={`${filtered.length} pagos realizados`}
+            period={periodFrom || periodTo ? `${periodFrom || "…"} — ${periodTo || "…"}` : undefined}
+          />
+        }
       />
 
       {/* Stats */}
@@ -208,11 +214,11 @@ export default function PaymentHistory() {
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
               <span>Detalle del Pago</span>
-              <PrintButton contentRef={printRef} label="Imprimir" />
+              <PrintButton contentRef={detailRef} label="Imprimir" title="Detalle de Pago" subtitle={showDetail?.worker_name} />
             </DialogTitle>
           </DialogHeader>
           {showDetail && (
-            <div>
+            <div ref={detailRef}>
               {/* Header info */}
               <div className="grid grid-cols-2 gap-4 mb-5 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
                 <div>

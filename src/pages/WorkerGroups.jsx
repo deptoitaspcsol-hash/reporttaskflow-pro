@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Users, Plus, Pencil, Trash2, Phone, Shield, TrendingUp, ClipboardList } from "lucide-react";
+import { Users, Plus, Pencil, Trash2, Phone, Shield } from "lucide-react";
 import { useRole } from "../components/shared/useRole";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,7 @@ const GROUP_COLORS = [
 const defaultForm = { name: "", supervisor_name: "", supervisor_phone: "", description: "", color: "#10b981", status: "activo" };
 
 export default function WorkerGroups() {
-  const { canWrite, canDelete } = useRole();
+  const { canWrite, canDelete } = useRole("worker_groups");
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultForm);

@@ -1,5 +1,4 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import TaskCard from "./TaskCard";
 import EmptyState from "../shared/EmptyState";

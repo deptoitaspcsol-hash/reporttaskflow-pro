@@ -1,7 +1,7 @@
 import React from "react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, ReferenceLine
+  ResponsiveContainer
 } from "recharts";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";

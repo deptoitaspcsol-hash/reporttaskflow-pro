@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, DollarSign, Clock, Users, Zap } from "lucide-react";
+import { DollarSign, Zap } from "lucide-react";
 
 function MetricRow({ label, value, sub, color = "text-slate-800" }) {
   return (

@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { format } from "date-fns";
-import { CreditCard, Plus, Eye, CheckCircle2, Clock, FileText } from "lucide-react";
+import { CreditCard, Plus, Eye, CheckCircle2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +18,7 @@ import EmptyState from "../components/shared/EmptyState";
 import PrintButton from "../components/shared/PrintButton";
 
 export default function PaymentClosings() {
-  const { canWrite, canDelete } = useRole();
+  const { canWrite, canDelete } = useRole("payment_closings");
   const [showCreate, setShowCreate] = useState(false);
   const [showDetail, setShowDetail] = useState(null);
   const [closingForm, setClosingForm] = useState({
@@ -241,7 +241,7 @@ export default function PaymentClosings() {
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
               <span>Ficha de Pago</span>
-              <PrintButton contentRef={printRef} label="Imprimir Ficha" />
+              <PrintButton contentRef={printRef} label="Imprimir Ficha" title="Ficha de Pago" subtitle={showDetail?.worker_name} period={showDetail ? `${showDetail.period_start} — ${showDetail.period_end}` : undefined} />
             </DialogTitle>
           </DialogHeader>
           {showDetail && (

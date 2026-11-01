@@ -4,13 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
-  Users, Briefcase, ClipboardList, CreditCard,
-  TrendingUp, ArrowRight, Shield, ListTodo,
-  CalendarDays, DollarSign, Clock, Zap
+  Users, ClipboardList,
+  TrendingUp, ArrowRight, ListTodo,
+  CalendarDays, Zap
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { format, subDays } from "date-fns";
 import { es } from "date-fns/locale";
 import StatCard from "../components/shared/StatCard";
