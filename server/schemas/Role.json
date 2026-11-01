@@ -1,0 +1,31 @@
+{
+  "entity": "Role",
+  "label": "Rol personalizado",
+  "fields": {
+    "name": {
+      "t": "s",
+      "req": true,
+      "max": 60
+    },
+    "description": {
+      "t": "s",
+      "max": 500
+    },
+    "color": {
+      "t": "s",
+      "max": 20
+    },
+    "permissions": {
+      "t": "o"
+    }
+  },
+  "unique": [
+    "name"
+  ],
+  "policy": {
+    "read": "@any",
+    "create": "@admin",
+    "edit": "@admin",
+    "delete": "@admin"
+  }
+}

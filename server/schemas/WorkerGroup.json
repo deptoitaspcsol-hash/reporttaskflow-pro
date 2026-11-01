@@ -1,0 +1,59 @@
+{
+  "entity": "WorkerGroup",
+  "label": "Grupo de trabajo",
+  "fields": {
+    "name": {
+      "t": "s",
+      "req": true,
+      "max": 120
+    },
+    "supervisor_name": {
+      "t": "s",
+      "max": 200
+    },
+    "supervisor_phone": {
+      "t": "s",
+      "max": 50
+    },
+    "description": {
+      "t": "s",
+      "max": 2000
+    },
+    "color": {
+      "t": "s",
+      "max": 20
+    },
+    "status": {
+      "t": "s",
+      "enum": [
+        "activo",
+        "inactivo"
+      ]
+    }
+  },
+  "indexes": [
+    "status"
+  ],
+  "unique": [
+    "name"
+  ],
+  "policy": {
+    "read": [
+      "worker_groups",
+      "workers",
+      "daily_reports",
+      "tasks",
+      "tasks_assign",
+      "reports"
+    ],
+    "create": [
+      "worker_groups"
+    ],
+    "edit": [
+      "worker_groups"
+    ],
+    "delete": [
+      "worker_groups"
+    ]
+  }
+}

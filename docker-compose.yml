@@ -1,0 +1,115 @@
+# Control de Labores (TaskFlow Pro) — despliegue autoalojado.
+#   1) ./deploy/scripts/gen-secrets.sh      (crea .env con contraseñas aleatorias)
+#   2) editar .env: SITE_ADDRESS, PUBLIC_URL, correo...
+#   3) docker compose up -d --build
+# Guía completa: docs/DESPLIEGUE.md
+name: labores
+
+services:
+  # --- Base de datos --------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_OWNER_USER:-labores_owner}
+      POSTGRES_PASSWORD: ${DB_OWNER_PASSWORD:?Falta DB_OWNER_PASSWORD (ejecuta deploy/scripts/gen-secrets.sh)}
+      POSTGRES_DB: ${DB_NAME:-labores}
+      APP_DB_PASSWORD: ${DB_APP_PASSWORD:?Falta DB_APP_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --data-checksums"
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/db/init.sh:/docker-entrypoint-initdb.d/10-roles.sh:ro
+    networks: [data]            # sin puertos publicados: solo la API y las migraciones llegan a la base
+    security_opt: ["no-new-privileges:true"]
+    shm_size: 128mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # --- Migraciones (corre una vez y termina; usa el rol propietario) -------------------------------
+  migrate:
+    build: ./server
+    command: ["node", "src/migrate.js"]
+    restart: "no"
+    environment:
+      DATABASE_URL: postgres://${DB_OWNER_USER:-labores_owner}:${DB_OWNER_PASSWORD}@db:5432/${DB_NAME:-labores}
+      NODE_ENV: production
+      PUBLIC_URL: ${PUBLIC_URL:?Falta PUBLIC_URL}
+    depends_on:
+      db: { condition: service_healthy }
+    networks: [data]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  # --- API ------------------------------------------------------------------------------------
+  api:
+    build: ./server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # La API usa el rol limitado "app_rw": puede leer y escribir datos, no cambiar el esquema.
+      DATABASE_URL: postgres://app_rw:${DB_APP_PASSWORD}@db:5432/${DB_NAME:-labores}
+      PUBLIC_URL: ${PUBLIC_URL}
+      TRUST_PROXY: "true"
+      UPLOAD_DIR: /data/uploads
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-10}
+      SESSION_TTL_HOURS: ${SESSION_TTL_HOURS:-168}
+      SMTP_URL: ${SMTP_URL:-}
+      MAIL_FROM: ${MAIL_FROM:-Control de Labores <no-reply@localhost>}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      db: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+    networks: [data, app]       # "data": base de datos. "app": web (y salida a internet para el correo SMTP)
+    read_only: true
+    tmpfs: ["/tmp"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 768m
+    pids_limit: 200
+
+  # --- Interfaz + HTTPS ------------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+      TLS_DIRECTIVE: ${TLS_DIRECTIVE:-}
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+      - "${HTTPS_PORT:-443}:443/udp"
+    volumes:
+      - caddy_data:/data         # certificados y CA interna: conservar entre reinicios
+      - caddy_config:/config
+    depends_on:
+      api: { condition: service_healthy }
+    networks: [app]
+    read_only: true
+    tmpfs: ["/tmp"]
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+
+networks:
+  data:
+    internal: true              # sin acceso a internet ni desde fuera
+  app: {}
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:

@@ -48,3 +48,35 @@ También conviene: activar la verificación en dos pasos para administradores y 
 - Las advertencias restantes de `npm audit` son de herramientas de desarrollo (ESLint, workbox-build) y no llegan al navegador.
 - El token de sesión del SDK de Base44 se guarda en `localStorage` (diseño de la plataforma). Una cabecera `Content-Security-Policy`
   reduciría el riesgo de robo por XSS, pero debe configurarse en el hosting; una etiqueta `<meta>` podría romper el editor de Base44.
+
+
+---
+
+# Versión autoalojada (carpeta `server/`)
+
+Con el backend propio, **los permisos y la validación se aplican en el servidor**, que era la principal limitación de la versión sobre Base44.
+
+| Riesgo | Cómo se controla |
+|---|---|
+| Alguien llama a la API saltándose la pantalla | Cada petición exige sesión y permiso por entidad y acción (matriz de roles, también para roles personalizados). Probado con 50 pruebas contra PostgreSQL real |
+| Escalada de privilegios (un usuario se hace admin) | Solo un admin puede cambiar `role` o `blocked`; no puede cambiar su propio rol, bloquearse ni dejar el sistema sin administrador; el rol debe existir |
+| Robo de contraseñas en la base de datos | scrypt (N=2^15) con sal por usuario; nunca se devuelven hashes por la API |
+| Robo de la sesión | Cookie `__Host-` HttpOnly, Secure, SameSite=Strict; en la base solo la huella SHA-256 del token; el cierre de sesión y el bloqueo la invalidan al instante; caducidad de 7 días deslizante y 30 absolutos |
+| Fuerza bruta | 10 intentos/min por IP, bloqueo de la cuenta 15 min tras 5 fallos, mismo mensaje y mismo tiempo exista o no el correo |
+| CSRF | Encabezado propio obligatorio en peticiones que modifican datos + verificación de `Origin` + SameSite=Strict |
+| Inyección SQL | Consultas parametrizadas; los campos de filtro y orden se validan contra el esquema (probado con cargas maliciosas) |
+| Datos inválidos | Validación por esquema (tipos, rangos, enums, fechas), límites de tamaño, unicidad aplicada con índices |
+| Datos personales (cédula, teléfono, salario) | Se ocultan en el servidor a roles sin permiso sobre Trabajadores |
+| Archivos peligrosos | Lista blanca por extensión **y** firma del contenido; sin SVG/HTML; privados (requieren sesión); servidos con `nosniff` y CSP `sandbox`; PDF/Office solo como descarga |
+| Manipulación de la bitácora | `audit_log` e `Historial` son de solo agregar, por trigger en la base de datos (ni el propietario puede editarlos sin quitar el trigger) |
+| Compromiso de la API → base de datos | La API usa el rol `app_rw`: sin DDL (no puede borrar ni alterar tablas) y sin UPDATE/DELETE sobre la auditoría |
+| XSS | CSP estricta (`script-src 'self'`) verificada en navegador real, React escapa el contenido, impresión desde iframe sin scripts |
+| Exposición de servicios | Solo Caddy publica puertos; la base de datos está en una red interna; contenedores sin root, de solo lectura y sin capacidades |
+
+## Lo que sigue siendo responsabilidad tuya
+
+- Mantener actualizados el sistema operativo y las imágenes (`docker compose pull && docker compose up -d --build`, al menos mensual).
+- **Respaldos fuera del servidor** y probar la restauración (`docs/DESPLIEGUE.md`).
+- Proteger el archivo `.env` (permisos 600, no subirlo a Git) y el acceso SSH al servidor (llaves, sin contraseña).
+- No hay verificación en dos pasos (2FA); si el acceso es desde internet, considera ponerlo detrás de una VPN (WireGuard/Tailscale).
+- No se ha hecho una auditoría externa ni pruebas de carga; conviene una revisión antes de exponerlo a internet con datos reales.

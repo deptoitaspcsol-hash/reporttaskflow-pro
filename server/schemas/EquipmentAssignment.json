@@ -1,0 +1,71 @@
+{
+  "entity": "EquipmentAssignment",
+  "label": "Asignación / mantenimiento de equipo",
+  "fields": {
+    "type": {
+      "t": "s",
+      "req": true,
+      "max": 40
+    },
+    "equipment_id": {
+      "t": "s",
+      "max": 40
+    },
+    "equipment_name": {
+      "t": "s",
+      "max": 200
+    },
+    "assigned_to": {
+      "t": "s",
+      "max": 40
+    },
+    "worker_id": {
+      "t": "s",
+      "max": 40
+    },
+    "worker_name": {
+      "t": "s",
+      "max": 200
+    },
+    "group_name": {
+      "t": "s",
+      "max": 120
+    },
+    "date": {
+      "t": "d"
+    },
+    "expected_return": {
+      "t": "d"
+    },
+    "condition_in": {
+      "t": "s",
+      "max": 40
+    },
+    "condition_out": {
+      "t": "s",
+      "max": 40
+    },
+    "maintenance_cost": {
+      "t": "n",
+      "min": 0
+    },
+    "maintenance_provider": {
+      "t": "s",
+      "max": 200
+    },
+    "notes": {
+      "t": "s",
+      "max": 4000
+    }
+  },
+  "indexes": [
+    "date",
+    "equipment_id"
+  ],
+  "policy": {
+    "read": "@any",
+    "create": "@writer",
+    "edit": "@writer",
+    "delete": "@deleter"
+  }
+}

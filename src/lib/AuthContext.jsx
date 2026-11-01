@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { appParams } from '@/lib/app-params';
+import { SELF_HOSTED } from '@/api/backend';
 import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
 
 const AuthContext = createContext();
@@ -18,6 +19,23 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const checkAppState = async () => {
+    // Versión autoalojada: no existe "public-settings"; basta con preguntar quién es el usuario (cookie de sesión).
+    if (SELF_HOSTED) {
+      try {
+        setAuthError(null);
+        setUser(await base44.auth.me());
+        setIsAuthenticated(true);
+      } catch (error) {
+        setIsAuthenticated(false);
+        setAuthError(error.status === 401 || error.status === 403
+          ? { type: 'auth_required', message: 'Authentication required' }
+          : { type: 'unknown', message: error.message });
+      } finally {
+        setIsLoadingPublicSettings(false);
+        setIsLoadingAuth(false);
+      }
+      return;
+    }
     try {
       setIsLoadingPublicSettings(true);
       setAuthError(null);

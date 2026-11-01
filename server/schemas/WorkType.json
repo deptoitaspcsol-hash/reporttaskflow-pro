@@ -1,0 +1,72 @@
+{
+  "entity": "WorkType",
+  "label": "Tipo de labor",
+  "fields": {
+    "name": {
+      "t": "s",
+      "req": true,
+      "max": 200
+    },
+    "unit": {
+      "t": "s",
+      "req": true,
+      "max": 40
+    },
+    "rate": {
+      "t": "n",
+      "req": true,
+      "min": 0
+    },
+    "code": {
+      "t": "s",
+      "max": 50
+    },
+    "description": {
+      "t": "s",
+      "max": 2000
+    },
+    "category": {
+      "t": "s",
+      "max": 120
+    },
+    "labor_type": {
+      "t": "s",
+      "max": 120
+    },
+    "cost_center": {
+      "t": "s",
+      "max": 120
+    },
+    "cost_center_2": {
+      "t": "s",
+      "max": 120
+    }
+  },
+  "indexes": [
+    "name",
+    "code"
+  ],
+  "unique": [
+    "name",
+    "code"
+  ],
+  "policy": {
+    "read": [
+      "work_types",
+      "daily_reports",
+      "tasks",
+      "tasks_assign",
+      "tasks_complete",
+      "reports"
+    ],
+    "create": [
+      "work_types"
+    ],
+    "edit": [
+      "work_types"
+    ],
+    "delete": [
+      "work_types"
+    ]
+  }
+}

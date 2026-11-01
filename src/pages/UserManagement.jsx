@@ -90,7 +90,12 @@ export default function UserManagement() {
     setInviting(true);
     try {
       // inviteUser siempre envía el correo de invitación. Solo acepta "admin" o "user".
-      await base44.users.inviteUser(email, inviteRole === "admin" ? "admin" : "user");
+      const invited = await base44.users.inviteUser(email, inviteRole === "admin" ? "admin" : "user");
+      // Versión autoalojada sin correo configurado: el servidor devuelve el enlace para entregarlo por otro medio.
+      if (invited?.invite_url) {
+        try { await navigator.clipboard.writeText(invited.invite_url); } catch { /* sin permiso de portapapeles */ }
+        toast.info("No hay correo configurado: el enlace de invitación se copió al portapapeles. Envíaselo a la persona.", { duration: 15000 });
+      }
 
       // El usuario tarda un momento en aparecer: se reintenta (antes era un solo setTimeout fijo
       // y, si no aparecía a tiempo, el rol y el puesto elegidos se perdían sin avisar).

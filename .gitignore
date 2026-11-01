@@ -28,3 +28,9 @@ dist-ssr
 *.sw?
 
 .env
+# Despliegue autoalojado
+.env
+backups/
+deploy/certs/
+server/node_modules/
+!.env.example

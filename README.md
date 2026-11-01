@@ -60,3 +60,10 @@ Se puede instalar en el celular o la computadora y abre la interfaz sin conexió
 - El permiso "Exportar" de la matriz de roles controla los botones de CSV y PDF.
 
 Ver también [SECURITY.md](SECURITY.md).
+
+
+## Versión autoalojada (sin Base44)
+
+La carpeta `server/` contiene una API propia (Node + PostgreSQL) y el despliegue con Docker Compose + HTTPS automático.
+Empieza por [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md); la arquitectura está en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md) y la migración de datos en
+[docs/MIGRACION-BASE44.md](docs/MIGRACION-BASE44.md). La interfaz se compila con `VITE_BACKEND=selfhosted`; sin esa variable sigue funcionando con Base44.

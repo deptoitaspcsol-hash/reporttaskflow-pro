@@ -1,0 +1,105 @@
+{
+  "entity": "DailyReport",
+  "label": "Reporte diario",
+  "fields": {
+    "date": {
+      "t": "d",
+      "req": true
+    },
+    "worker_id": {
+      "t": "s",
+      "req": true,
+      "max": 40
+    },
+    "worker_name": {
+      "t": "s",
+      "max": 200
+    },
+    "work_type_id": {
+      "t": "s",
+      "max": 40
+    },
+    "work_type_name": {
+      "t": "s",
+      "max": 200
+    },
+    "group": {
+      "t": "s",
+      "max": 120
+    },
+    "location": {
+      "t": "s",
+      "max": 200
+    },
+    "quantity": {
+      "t": "n",
+      "min": 0
+    },
+    "unit": {
+      "t": "s",
+      "max": 40
+    },
+    "rate": {
+      "t": "n",
+      "min": 0
+    },
+    "amount": {
+      "t": "n",
+      "min": 0
+    },
+    "progress": {
+      "t": "n",
+      "min": 0,
+      "max": 100
+    },
+    "base_salary": {
+      "t": "n",
+      "min": 0
+    },
+    "salary_payment": {
+      "t": "n",
+      "min": 0
+    },
+    "status": {
+      "t": "s",
+      "max": 40
+    },
+    "closing_id": {
+      "t": "s",
+      "max": 40
+    },
+    "notes": {
+      "t": "s",
+      "max": 4000
+    },
+    "attachments": {
+      "t": "a"
+    }
+  },
+  "indexes": [
+    "date",
+    "status",
+    "worker_id",
+    "group"
+  ],
+  "policy": {
+    "read": [
+      "daily_reports",
+      "reports",
+      "payment_closings",
+      "payment_history",
+      "worker_groups",
+      "tasks"
+    ],
+    "create": [
+      "daily_reports"
+    ],
+    "edit": [
+      "daily_reports",
+      "payment_closings"
+    ],
+    "delete": [
+      "daily_reports"
+    ]
+  }
+}

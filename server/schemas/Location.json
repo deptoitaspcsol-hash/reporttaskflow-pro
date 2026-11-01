@@ -1,0 +1,36 @@
+{
+  "entity": "Location",
+  "label": "Ubicación",
+  "fields": {
+    "name": {
+      "t": "s",
+      "req": true,
+      "max": 200
+    },
+    "lat": {
+      "t": "n",
+      "req": true,
+      "min": -90,
+      "max": 90
+    },
+    "lng": {
+      "t": "n",
+      "req": true,
+      "min": -180,
+      "max": 180
+    },
+    "description": {
+      "t": "s",
+      "max": 2000
+    }
+  },
+  "unique": [
+    "name"
+  ],
+  "policy": {
+    "read": "@any",
+    "create": "@writer",
+    "edit": "@writer",
+    "delete": "@deleter"
+  }
+}

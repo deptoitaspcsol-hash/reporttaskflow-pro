@@ -1,0 +1,54 @@
+{
+  "entity": "Historial",
+  "label": "Historial de cambios (bitácora)",
+  "fields": {
+    "entity_type": {
+      "t": "s",
+      "req": true,
+      "max": 80
+    },
+    "entity_id": {
+      "t": "s",
+      "req": true,
+      "max": 40
+    },
+    "action": {
+      "t": "s",
+      "req": true,
+      "max": 40
+    },
+    "entity_label": {
+      "t": "s",
+      "max": 300
+    },
+    "field": {
+      "t": "s",
+      "max": 120
+    },
+    "old_value": {
+      "t": "s",
+      "max": 4000
+    },
+    "new_value": {
+      "t": "s",
+      "max": 4000
+    },
+    "modified_by": {
+      "t": "s",
+      "max": 200
+    },
+    "modified_at": {
+      "t": "s",
+      "max": 40
+    }
+  },
+  "indexes": [
+    "entity_id"
+  ],
+  "policy": {
+    "read": "@any",
+    "create": "@writer",
+    "edit": "@never",
+    "delete": "@never"
+  }
+}

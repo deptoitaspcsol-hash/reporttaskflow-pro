@@ -1,0 +1,109 @@
+{
+  "entity": "Task",
+  "label": "Tarea",
+  "fields": {
+    "title": {
+      "t": "s",
+      "req": true,
+      "max": 300
+    },
+    "description": {
+      "t": "s",
+      "max": 8000
+    },
+    "project_id": {
+      "t": "s",
+      "max": 40
+    },
+    "work_type_id": {
+      "t": "s",
+      "max": 40
+    },
+    "work_type_name": {
+      "t": "s",
+      "max": 200
+    },
+    "worker_id": {
+      "t": "s",
+      "max": 40
+    },
+    "worker_name": {
+      "t": "s",
+      "max": 200
+    },
+    "worker_ids": {
+      "t": "a",
+      "items": "s"
+    },
+    "worker_names": {
+      "t": "a",
+      "items": "s"
+    },
+    "group_name": {
+      "t": "s",
+      "max": 120
+    },
+    "assigned_to": {
+      "t": "s",
+      "max": 200
+    },
+    "location": {
+      "t": "s",
+      "max": 200
+    },
+    "start_date": {
+      "t": "d"
+    },
+    "end_date": {
+      "t": "d"
+    },
+    "estimated_cost": {
+      "t": "n",
+      "min": 0
+    },
+    "priority": {
+      "t": "s",
+      "max": 40
+    },
+    "status": {
+      "t": "s",
+      "max": 40
+    },
+    "notes": {
+      "t": "s",
+      "max": 8000
+    },
+    "attachments": {
+      "t": "a"
+    },
+    "subtasks": {
+      "t": "a"
+    }
+  },
+  "indexes": [
+    "status",
+    "project_id",
+    "worker_id",
+    "end_date"
+  ],
+  "policy": {
+    "read": [
+      "tasks",
+      "tasks_assign",
+      "tasks_complete",
+      "projects"
+    ],
+    "create": [
+      "tasks",
+      "tasks_assign"
+    ],
+    "edit": [
+      "tasks",
+      "tasks_assign",
+      "tasks_complete"
+    ],
+    "delete": [
+      "tasks"
+    ]
+  }
+}

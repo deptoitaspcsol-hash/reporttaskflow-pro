@@ -1,0 +1,59 @@
+{
+  "entity": "Equipment",
+  "label": "Equipo / herramienta",
+  "fields": {
+    "name": {
+      "t": "s",
+      "req": true,
+      "max": 200
+    },
+    "code": {
+      "t": "s",
+      "max": 50
+    },
+    "category": {
+      "t": "s",
+      "max": 80
+    },
+    "description": {
+      "t": "s",
+      "max": 2000
+    },
+    "status": {
+      "t": "s",
+      "max": 40
+    },
+    "purchase_date": {
+      "t": "d"
+    },
+    "purchase_cost": {
+      "t": "n",
+      "min": 0
+    },
+    "current_value": {
+      "t": "n",
+      "min": 0
+    },
+    "location": {
+      "t": "s",
+      "max": 200
+    },
+    "notes": {
+      "t": "s",
+      "max": 4000
+    }
+  },
+  "indexes": [
+    "status",
+    "category"
+  ],
+  "unique": [
+    "code"
+  ],
+  "policy": {
+    "read": "@any",
+    "create": "@writer",
+    "edit": "@writer",
+    "delete": "@deleter"
+  }
+}
