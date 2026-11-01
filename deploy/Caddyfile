@@ -1,0 +1,58 @@
+# Caddy: sirve la interfaz, reenvía /api a la API y se encarga del HTTPS.
+#   SITE_ADDRESS   dominio (https://labores.empresa.com) o nombre interno (labores.empresa.local)
+#   TLS_DIRECTIVE  vacío = certificado público automático (Let's Encrypt); "tls internal" = CA propia de Caddy (red interna)
+{
+	admin off
+	servers {
+		protocols h1 h2 h3
+	}
+}
+
+{$SITE_ADDRESS:localhost} {
+	{$TLS_DIRECTIVE}
+
+	encode zstd gzip
+
+	# --- Cabeceras de seguridad ---------------------------------------------------------------
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Cross-Origin-Opener-Policy "same-origin"
+		Permissions-Policy "camera=(self), geolocation=(self), microphone=(), payment=(), usb=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.tile.openstreetmap.org; font-src 'self' data:; connect-src 'self' https://nominatim.openstreetmap.org; media-src 'self' blob:; worker-src 'self'; manifest-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+		-Server
+	}
+
+	# --- API ------------------------------------------------------------------------------------
+	handle /api/* {
+		request_body {
+			max_size 12MB
+		}
+		reverse_proxy api:3000 {
+			health_uri /api/health
+			health_interval 15s
+			# La API necesita saber la IP real y el protocolo para el límite de intentos y las cookies seguras.
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	# --- Interfaz (SPA) ------------------------------------------------------------------------
+	handle {
+		root * /srv
+		# Los archivos con hash en el nombre no cambian nunca: caché larga. El resto, siempre revalidar
+		# (así las actualizaciones de la PWA se detectan de inmediato).
+		@immutable path /assets/*
+		header @immutable Cache-Control "public, max-age=31536000, immutable"
+		@revalidate not path /assets/*
+		header @revalidate Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

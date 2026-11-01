@@ -1,0 +1,55 @@
+{
+  "entity": "SalaryScale",
+  "label": "Escala salarial",
+  "fields": {
+    "name": {
+      "t": "s",
+      "req": true,
+      "max": 200
+    },
+    "amount": {
+      "t": "n",
+      "req": true,
+      "min": 0
+    },
+    "period": {
+      "t": "s",
+      "max": 40
+    },
+    "category": {
+      "t": "s",
+      "max": 120
+    },
+    "description": {
+      "t": "s",
+      "max": 2000
+    },
+    "status": {
+      "t": "s",
+      "enum": [
+        "activo",
+        "inactivo"
+      ]
+    }
+  },
+  "indexes": [
+    "status"
+  ],
+  "unique": [
+    "name"
+  ],
+  "policy": {
+    "read": [
+      "workers"
+    ],
+    "create": [
+      "workers"
+    ],
+    "edit": [
+      "workers"
+    ],
+    "delete": [
+      "workers"
+    ]
+  }
+}

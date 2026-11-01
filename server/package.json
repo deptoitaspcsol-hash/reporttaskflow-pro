@@ -1,0 +1,28 @@
+{
+  "name": "labores-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API propia de Control de Labores (TaskFlow Pro): reemplaza el backend de Base44",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "migrate": "node src/migrate.js",
+    "create-user": "node scripts/create-user.js",
+    "import": "node scripts/import-records.js",
+    "test": "node --test --test-concurrency=1 test/*.test.js"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.0",
+    "@fastify/helmet": "^13.0.0",
+    "@fastify/multipart": "^9.0.0",
+    "@fastify/rate-limit": "^10.0.0",
+    "ajv": "^8.17.0",
+    "ajv-formats": "^3.0.1",
+    "fastify": "^5.0.0",
+    "nodemailer": "^10.3.1",
+    "pg": "^8.13.0"
+  }
+}

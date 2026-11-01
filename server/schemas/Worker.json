@@ -1,0 +1,99 @@
+{
+  "entity": "Worker",
+  "label": "Trabajador",
+  "fields": {
+    "full_name": {
+      "t": "s",
+      "req": true,
+      "max": 200
+    },
+    "id_number": {
+      "t": "s",
+      "max": 50
+    },
+    "phone": {
+      "t": "s",
+      "max": 50
+    },
+    "group": {
+      "t": "s",
+      "max": 120
+    },
+    "work_area": {
+      "t": "s",
+      "max": 120
+    },
+    "hire_date": {
+      "t": "d"
+    },
+    "base_salary": {
+      "t": "n",
+      "min": 0
+    },
+    "worker_code": {
+      "t": "s",
+      "max": 50
+    },
+    "status": {
+      "t": "s",
+      "enum": [
+        "activo",
+        "inactivo"
+      ]
+    },
+    "photo_url": {
+      "t": "s",
+      "max": 500
+    },
+    "salary_scale_id": {
+      "t": "s",
+      "max": 40
+    },
+    "salary_scale_name": {
+      "t": "s",
+      "max": 200
+    }
+  },
+  "indexes": [
+    "status",
+    "group",
+    "full_name"
+  ],
+  "unique": [
+    "id_number",
+    "worker_code"
+  ],
+  "sensitive": {
+    "module": "workers",
+    "fields": [
+      "id_number",
+      "phone",
+      "base_salary",
+      "salary_scale_id",
+      "salary_scale_name",
+      "photo_url"
+    ]
+  },
+  "policy": {
+    "read": [
+      "workers",
+      "daily_reports",
+      "tasks",
+      "tasks_assign",
+      "tasks_complete",
+      "worker_groups",
+      "payment_closings",
+      "payment_history",
+      "reports"
+    ],
+    "create": [
+      "workers"
+    ],
+    "edit": [
+      "workers"
+    ],
+    "delete": [
+      "workers"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "entity": "Project",
+  "label": "Proyecto",
+  "fields": {
+    "name": {
+      "t": "s",
+      "req": true,
+      "max": 200
+    },
+    "description": {
+      "t": "s",
+      "max": 4000
+    },
+    "color": {
+      "t": "s",
+      "max": 20
+    },
+    "status": {
+      "t": "s",
+      "max": 40
+    },
+    "start_date": {
+      "t": "d"
+    },
+    "end_date": {
+      "t": "d"
+    },
+    "notes": {
+      "t": "s",
+      "max": 4000
+    }
+  },
+  "indexes": [
+    "status"
+  ],
+  "unique": [
+    "name"
+  ],
+  "policy": {
+    "read": [
+      "projects",
+      "tasks",
+      "tasks_assign",
+      "tasks_complete"
+    ],
+    "create": [
+      "projects"
+    ],
+    "edit": [
+      "projects"
+    ],
+    "delete": [
+      "projects"
+    ]
+  }
+}

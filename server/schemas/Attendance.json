@@ -1,0 +1,77 @@
+{
+  "entity": "Attendance",
+  "label": "Asistencia",
+  "fields": {
+    "worker_id": {
+      "t": "s",
+      "req": true,
+      "max": 40
+    },
+    "date": {
+      "t": "d",
+      "req": true
+    },
+    "worker_name": {
+      "t": "s",
+      "max": 200
+    },
+    "worker_code": {
+      "t": "s",
+      "max": 50
+    },
+    "group": {
+      "t": "s",
+      "max": 120
+    },
+    "check_in": {
+      "t": "s",
+      "max": 10
+    },
+    "check_out": {
+      "t": "s",
+      "max": 10
+    },
+    "status": {
+      "t": "s",
+      "max": 40
+    },
+    "work_type_id": {
+      "t": "s",
+      "max": 40
+    },
+    "work_type_name": {
+      "t": "s",
+      "max": 200
+    },
+    "base_salary": {
+      "t": "n",
+      "min": 0
+    },
+    "hours_worked": {
+      "t": "n",
+      "min": 0
+    },
+    "regular_hours": {
+      "t": "n",
+      "min": 0
+    },
+    "extra_hours": {
+      "t": "n",
+      "min": 0
+    },
+    "notes": {
+      "t": "s",
+      "max": 4000
+    }
+  },
+  "indexes": [
+    "date",
+    "worker_id"
+  ],
+  "policy": {
+    "read": "@any",
+    "create": "@writer",
+    "edit": "@writer",
+    "delete": "@deleter"
+  }
+}

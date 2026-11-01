@@ -1,0 +1,69 @@
+{
+  "entity": "PaymentClosing",
+  "label": "Cierre de pago",
+  "fields": {
+    "period_start": {
+      "t": "d",
+      "req": true
+    },
+    "period_end": {
+      "t": "d",
+      "req": true
+    },
+    "worker_id": {
+      "t": "s",
+      "req": true,
+      "max": 40
+    },
+    "closing_date": {
+      "t": "d"
+    },
+    "worker_name": {
+      "t": "s",
+      "max": 200
+    },
+    "total_amount": {
+      "t": "n",
+      "min": 0
+    },
+    "total_tasks": {
+      "t": "n",
+      "min": 0
+    },
+    "report_ids": {
+      "t": "a",
+      "items": "s"
+    },
+    "details": {
+      "t": "a"
+    },
+    "notes": {
+      "t": "s",
+      "max": 4000
+    },
+    "status": {
+      "t": "s",
+      "max": 40
+    }
+  },
+  "indexes": [
+    "status",
+    "worker_id",
+    "period_start"
+  ],
+  "policy": {
+    "read": [
+      "payment_closings",
+      "payment_history"
+    ],
+    "create": [
+      "payment_closings"
+    ],
+    "edit": [
+      "payment_closings"
+    ],
+    "delete": [
+      "payment_closings"
+    ]
+  }
+}
