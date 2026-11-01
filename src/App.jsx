@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster"
+import PWAManager from "@/components/pwa/PWAManager"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
@@ -72,6 +73,7 @@ function App() {
           <AuthenticatedApp />
         </Router>
         <Toaster />
+        <PWAManager />
       </QueryClientProvider>
     </AuthProvider>
   )

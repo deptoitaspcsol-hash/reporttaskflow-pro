@@ -1,6 +1,5 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 
 export const MODULES = [
   { key: "workers", label: "Trabajadores" },

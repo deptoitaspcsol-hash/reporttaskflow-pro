@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import {
-  Plus, Pencil, Trash2, Users, Clock, TrendingUp,
+  Plus, Pencil, Trash2, Users, Clock,
   CheckCircle2, XCircle, AlertCircle, CalendarDays, DollarSign, Search
 } from "lucide-react";
 import PageHeader from "../components/shared/PageHeader";

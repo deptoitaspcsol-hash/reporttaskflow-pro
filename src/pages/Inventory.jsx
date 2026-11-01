@@ -3,17 +3,15 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, Package, Wrench, ArrowLeftRight, Clock, DollarSign } from "lucide-react";
+import { Plus, Search, Package, Wrench, ArrowLeftRight, DollarSign } from "lucide-react";
 import PageHeader from "../components/shared/PageHeader";
 import EquipmentCard from "../components/inventory/EquipmentCard";
 import EquipmentForm from "../components/inventory/EquipmentForm";
 import AssignmentForm from "../components/inventory/AssignmentForm";
 import { useRole } from "../components/shared/useRole";
-import { format } from "date-fns";
 
 const STATUS_FILTER_OPTIONS = [
   { value: "all", label: "Todos" },

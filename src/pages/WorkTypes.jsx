@@ -19,7 +19,7 @@ const DEFAULT_LABOR_TYPES = ["Destajo", "Jornal", "Servicio", "Contrato"];
 const DEFAULT_COST_CENTERS = ["1", "2", "3"];
 
 export default function WorkTypes() {
-  const { canWrite, canDelete } = useRole();
+  const { canWrite, canDelete } = useRole("work_types");
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultWork);

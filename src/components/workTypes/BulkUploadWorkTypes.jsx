@@ -5,21 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { parseCSVObjects, MAX_IMPORT_BYTES } from "@/lib/csv";
 
 const EXPECTED_COLUMNS = ["code", "name", "description", "unit", "category", "labor_type", "cost_center", "cost_center_2"];
 const REQUIRED = ["name", "unit"];
 
+const normalizeHeader = (h) => h.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z_]/g, "");
+
+// Parser compartido (src/lib/csv.js): respeta comillas y comas dentro de campos, y limita el tamaño.
 function parseCSV(text) {
-  const lines = text.split(/\r?\n/).filter(l => l.trim());
-  if (lines.length < 2) return { headers: [], rows: [] };
-  const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z_]/g, ""));
-  const rows = lines.slice(1).map(line => {
-    const values = line.split(",").map(v => v.trim().replace(/^"|"$/g, ""));
-    const obj = {};
-    headers.forEach((h, i) => { obj[h] = values[i] ?? ""; });
-    return obj;
-  });
-  return { headers, rows };
+  return parseCSVObjects(text, normalizeHeader);
 }
 
 function validateRow(row, allRows, index) {
@@ -53,9 +49,20 @@ export default function BulkUploadWorkTypes({ onDone, existingWorkTypes = [] }) 
   const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > MAX_IMPORT_BYTES) {
+      toast.error("El archivo es demasiado grande (máximo 2 MB).");
+      e.target.value = "";
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const { rows: parsed } = parseCSV(ev.target.result);
+      let parsed;
+      try {
+        ({ rows: parsed } = parseCSV(ev.target.result));
+      } catch (err) {
+        toast.error(err.message || "No se pudo leer el archivo.");
+        return;
+      }
       const results = parsed.map((row, i) => {
         const errors = validateRow(row, parsed, i);
         // Validar contra registros existentes en BD

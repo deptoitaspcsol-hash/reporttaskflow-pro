@@ -25,7 +25,7 @@ const generateWorkerCode = (fullName, idNumber) => {
 };
 
 export default function Workers() {
-  const { canWrite, canDelete } = useRole();
+  const { canWrite, canDelete } = useRole("workers");
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(defaultWorker);

@@ -3,7 +3,10 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRole } from "../components/shared/useRole";
 import { format } from "date-fns";
-import { ClipboardList, Plus, Trash2, MapPin, History, Paperclip, Eye, Download, Map } from "lucide-react";
+import { toast } from "sonner";
+import { downloadCSV } from "@/lib/csv";
+import { exportCorporatePDF, formatMoney } from "@/lib/corporate";
+import { ClipboardList, Plus, Trash2, MapPin, History, Paperclip, Eye, Download, Map, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,7 +26,7 @@ import AttachmentsSection from "../components/shared/AttachmentsSection";
 import ReportsMap from "../components/reports/ReportsMap";
 
 export default function DailyReports() {
-  const { canWrite, canDelete } = useRole();
+  const { canWrite, canDelete, canExport, user } = useRole("daily_reports");
   const [showForm, setShowForm] = useState(false);
   const [historyReport, setHistoryReport] = useState(null);
   const [detailReport, setDetailReport] = useState(null);
@@ -132,16 +135,48 @@ export default function DailyReports() {
       r.amount ?? "",
       r.progress ?? "",
       r.status || "",
-      (r.notes || "").replace(/,/g, ";"),
+      r.notes || "",
     ]);
-    const csv = [headers, ...rows].map(row => row.join(",")).join("\n");
-    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `reportes_diarios_${filterDate || "todos"}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    // downloadCSV cierra bien las comillas y neutraliza fórmulas (=, +, -, @) para que Excel no las ejecute.
+    downloadCSV(`reportes_diarios_${filterDate || "todos"}.csv`, [headers, ...rows]);
+  };
+
+  const exportPDF = async () => {
+    try {
+      await exportCorporatePDF({
+        fileName: `reporte_diario_${filterDate || "todos"}.pdf`,
+        title: "Reporte Diario de Labores",
+        subtitle: [
+          filterGroup !== "all" ? `Grupo: ${filterGroup}` : null,
+          filterLocation !== "all" ? `Ubicación: ${filterLocation}` : null,
+        ].filter(Boolean).join(" · ") || undefined,
+        period: filterDate || "Todas las fechas",
+        generatedBy: user?.full_name || user?.email,
+        orientation: "landscape",
+        summary: [
+          { label: "Registros", value: String(filtered.length) },
+          { label: "Monto total", value: formatMoney(totalFiltered) },
+        ],
+        sections: [{
+          columns: [
+            { header: "Fecha", key: "date" },
+            { header: "Trabajador", key: "worker_name" },
+            { header: "Grupo", key: "group" },
+            { header: "Labor", key: "work_type_name" },
+            { header: "Ubicación", key: "location" },
+            { header: "Cantidad", key: "quantity", align: "right" },
+            { header: "Unidad", key: "unit" },
+            { header: "Monto", key: "amount", money: true },
+            { header: "Avance", key: "progress", align: "right", format: (v) => (v === undefined || v === null || v === "" ? "" : `${v}%`) },
+            { header: "Estado", key: "status" },
+          ],
+          rows: filtered,
+          totals: { amount: totalFiltered },
+        }],
+      });
+    } catch {
+      toast.error("No se pudo generar el PDF. Intenta de nuevo.");
+    }
   };
 
   return (
@@ -151,10 +186,22 @@ export default function DailyReports() {
         subtitle={`${filtered.length} registros · $${totalFiltered.toLocaleString()}`}
         actions={
           <div className="flex gap-2">
-            <Button variant="outline" onClick={exportCSV} className="gap-2 text-slate-600">
-              <Download className="w-4 h-4" /> Exportar CSV
-            </Button>
-            <PrintButton contentRef={printRef} />
+            {canExport && (
+              <>
+                <Button variant="outline" onClick={exportCSV} className="gap-2 text-slate-600">
+                  <Download className="w-4 h-4" /> Exportar CSV
+                </Button>
+                <Button variant="outline" onClick={exportPDF} className="gap-2 text-slate-600">
+                  <FileText className="w-4 h-4" /> Exportar PDF
+                </Button>
+              </>
+            )}
+            <PrintButton
+              contentRef={printRef}
+              title="Reporte Diario de Labores"
+              subtitle={`${filtered.length} registros · ${formatMoney(totalFiltered)}`}
+              period={filterDate || "Todas las fechas"}
+            />
             {canWrite ? (
               <Button onClick={() => { resetForm(); setShowForm(true); }} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
                 <Plus className="w-4 h-4" /> Agregar Tarea

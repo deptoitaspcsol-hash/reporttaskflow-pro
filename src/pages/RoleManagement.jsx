@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PageHeader from "../components/shared/PageHeader";
 import PermissionsMatrix, { MODULES, ACTIONS } from "../components/roles/PermissionsMatrix";
 import { useRole } from "../components/shared/useRole";
@@ -35,7 +34,7 @@ const SYSTEM_ROLES = [
 ];
 
 export default function RoleManagement() {
-  const { isAdmin, isLoading: roleLoading } = useRole();
+  const { isAdmin, isLoading: roleLoading, user: me } = useRole();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [expandedRole, setExpandedRole] = useState(null);
@@ -73,7 +72,18 @@ export default function RoleManagement() {
   const assignRoleMutation = useMutation({
     mutationFn: ({ userId, roleName }) => base44.entities.User.update(userId, { role: roleName }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["users"] }); toast.success("Rol asignado"); },
+    onError: () => toast.error("No se pudo asignar el rol."),
   });
+
+  // Mismas protecciones que en Usuarios: no cambiarse el propio rol ni quitar al último admin.
+  const requestAssign = (u, roleName) => {
+    if (me && (u.id === me.id || u.email === me.email)) return toast.error("No puedes cambiar tu propio rol.");
+    const admins = users.filter((x) => x.role === "admin" && !x.blocked).length;
+    if (u.role === "admin" && roleName !== "admin" && admins <= 1) {
+      return toast.error("Debe quedar al menos un administrador activo.");
+    }
+    assignRoleMutation.mutate({ userId: u.id, roleName });
+  };
 
   const closeForm = () => {
     setShowForm(false);
@@ -285,7 +295,7 @@ export default function RoleManagement() {
                     variant={hasRole ? "secondary" : "outline"}
                     size="sm"
                     className={`text-xs gap-1 ${hasRole ? "text-emerald-700 bg-emerald-50" : ""}`}
-                    onClick={() => assignRoleMutation.mutate({ userId: u.id, roleName: showAssign?.name.toLowerCase() })}
+                    onClick={() => requestAssign(u, showAssign?.name.toLowerCase())}
                   >
                     {hasRole ? <><Check className="w-3 h-3" /> Asignado</> : "Asignar"}
                   </Button>

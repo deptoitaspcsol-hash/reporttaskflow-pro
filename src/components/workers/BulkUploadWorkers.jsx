@@ -5,21 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { parseCSVObjects, MAX_IMPORT_BYTES } from "@/lib/csv";
 
 const EXPECTED_COLUMNS = ["full_name", "id_number", "phone", "group", "work_area", "hire_date", "base_salary", "worker_code"];
 const REQUIRED = ["full_name", "id_number", "phone", "group", "hire_date", "base_salary"];
 
+const normalizeHeader = (h) => h.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z_]/g, "");
+
+// Parser compartido (src/lib/csv.js): respeta comillas y comas dentro de campos, y limita el tamaño.
 function parseCSV(text) {
-  const lines = text.split(/\r?\n/).filter(l => l.trim());
-  if (lines.length < 2) return { headers: [], rows: [] };
-  const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z_]/g, ""));
-  const rows = lines.slice(1).map(line => {
-    const values = line.split(",").map(v => v.trim().replace(/^"|"$/g, ""));
-    const obj = {};
-    headers.forEach((h, i) => { obj[h] = values[i] ?? ""; });
-    return obj;
-  });
-  return { headers, rows };
+  return parseCSVObjects(text, normalizeHeader);
 }
 
 function validateRow(row, index) {
@@ -29,7 +25,7 @@ function validateRow(row, index) {
       errors.push(`Columna "${field}" requerida`);
     }
   });
-  if (row.base_salary && isNaN(Number(row.base_salary))) errors.push("base_salary debe ser número");
+  if (row.base_salary && (!Number.isFinite(Number(row.base_salary)) || Number(row.base_salary) < 0)) errors.push("base_salary debe ser un número mayor o igual a 0");
   if (row.hire_date && !/^\d{4}-\d{2}-\d{2}$/.test(row.hire_date)) errors.push("hire_date debe ser YYYY-MM-DD");
   return errors;
 }
@@ -53,9 +49,20 @@ export default function BulkUploadWorkers({ onDone }) {
   const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > MAX_IMPORT_BYTES) {
+      toast.error("El archivo es demasiado grande (máximo 2 MB).");
+      e.target.value = "";
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const { rows: parsed } = parseCSV(ev.target.result);
+      let parsed;
+      try {
+        ({ rows: parsed } = parseCSV(ev.target.result));
+      } catch (err) {
+        toast.error(err.message || "No se pudo leer el archivo.");
+        return;
+      }
       const results = parsed.map((row, i) => ({
         row,
         index: i + 2,

@@ -1,23 +1,42 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Upload, Loader2, Paperclip, Download, Trash2, FileText, Image } from "lucide-react";
+import { Upload, Loader2, Paperclip, Download, Trash2, FileText } from "lucide-react";
+import { toast } from "sonner";
+import { safeHttpUrl, validateUploadFile, sanitizeFileName, MAX_UPLOAD_BYTES } from "@/lib/security";
 
 export default function AttachmentsSection({ attachments = [], onUpdate, readOnly = false }) {
   const [uploading, setUploading] = useState(false);
 
   const handleUpload = async (e) => {
     const files = Array.from(e.target.files);
-    if (!files.length) return;
-    setUploading(true);
-    const urls = [...attachments];
-    for (const file of files) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      urls.push({ url: file_url, name: file.name, type: file.type });
-    }
-    onUpdate(urls);
-    setUploading(false);
     e.target.value = "";
+    if (!files.length) return;
+
+    // Validación en el cliente: tamaño y tipo (el atributo "accept" solo es una sugerencia del navegador).
+    const valid = [];
+    for (const file of files) {
+      const problem = validateUploadFile(file);
+      if (problem) toast.error(problem);
+      else valid.push(file);
+    }
+    if (!valid.length) return;
+
+    setUploading(true);
+    const items = [...attachments];
+    let failed = 0;
+    for (const file of valid) {
+      try {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        if (!safeHttpUrl(file_url)) throw new Error("URL no válida");
+        items.push({ url: file_url, name: sanitizeFileName(file.name), type: file.type });
+      } catch {
+        failed++;
+      }
+    }
+    if (items.length > attachments.length) onUpdate(items);
+    if (failed) toast.error(`No se pudieron subir ${failed} archivo(s). Intenta de nuevo.`);
+    setUploading(false);
   };
 
   const removeAttachment = (idx) => {
@@ -32,7 +51,8 @@ export default function AttachmentsSection({ attachments = [], onUpdate, readOnl
     return att.name || att.url?.split("/").pop().split("?")[0] || "Archivo";
   };
 
-  const getUrl = (att) => (typeof att === "string" ? att : att.url);
+  // Solo http(s): un adjunto guardado con "javascript:..." ya no se vuelve un enlace ejecutable.
+  const getUrl = (att) => safeHttpUrl(typeof att === "string" ? att : att?.url);
 
   const isImage = (att) => {
     const url = getUrl(att);
@@ -51,7 +71,7 @@ export default function AttachmentsSection({ attachments = [], onUpdate, readOnl
           )}
         </h3>
         {!readOnly && (
-          <label className="cursor-pointer">
+          <label className="cursor-pointer" title={`Máximo ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)} MB por archivo`}>
             <Button type="button" variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
               <span>
                 {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
@@ -61,7 +81,7 @@ export default function AttachmentsSection({ attachments = [], onUpdate, readOnl
             <input
               type="file"
               multiple
-              accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"
+              accept="image/jpeg,image/png,image/gif,image/webp,application/pdf,.doc,.docx,.xls,.xlsx,.txt"
               className="hidden"
               onChange={handleUpload}
               disabled={uploading}
@@ -79,7 +99,7 @@ export default function AttachmentsSection({ attachments = [], onUpdate, readOnl
           {attachments.map((att, i) => {
             const url = getUrl(att);
             const name = getFileName(att);
-            const img = isImage(att);
+            const img = !!url && isImage(att);
             return (
               <div key={i} className="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg border border-slate-100 group hover:border-slate-200 transition-colors">
                 {img ? (
@@ -93,13 +113,17 @@ export default function AttachmentsSection({ attachments = [], onUpdate, readOnl
                 )}
                 <span className="flex-1 text-sm text-slate-700 truncate min-w-0">{name}</span>
                 <div className="flex gap-1 shrink-0">
-                  <a href={url} download={name} target="_blank" rel="noopener noreferrer">
-                    <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-emerald-600">
-                      <Download className="w-3.5 h-3.5" />
-                    </Button>
-                  </a>
+                  {url ? (
+                    <a href={url} download={name} target="_blank" rel="noopener noreferrer" aria-label={`Descargar ${name}`}>
+                      <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-emerald-600">
+                        <Download className="w-3.5 h-3.5" />
+                      </Button>
+                    </a>
+                  ) : (
+                    <span className="text-[10px] text-red-500 self-center px-1">Enlace no válido</span>
+                  )}
                   {!readOnly && (
-                    <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-red-500" onClick={() => removeAttachment(i)}>
+                    <Button type="button" variant="ghost" size="icon" aria-label={`Quitar ${name}`} className="h-7 w-7 text-slate-400 hover:text-red-500" onClick={() => removeAttachment(i)}>
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>
                   )}

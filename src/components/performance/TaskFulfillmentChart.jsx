@@ -1,10 +1,9 @@
 import React from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Cell, LabelList
+  ResponsiveContainer, LabelList
 } from "recharts";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2 } from "lucide-react";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
